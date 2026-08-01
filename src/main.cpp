@@ -2,6 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include <imgui.h>
 #include <imgui-SFML.h>
+#include <vector>
+#include <string>
 
 int main(){
 
@@ -12,6 +14,9 @@ int main(){
     ImGui::SFML::Init(window);
 
     sf::Clock deltaClock;
+
+    std::vector <int> temp;
+
 
     while(window.isOpen()){
         while(const auto event = window.pollEvent()){
@@ -25,11 +30,19 @@ int main(){
         ImGui::SFML::Update(window, deltaClock.restart());
         ImGui::Begin("Test Window");
         ImGui::Text("Hello ImGui!");
-        if(ImGui::Button("Click me")){
-            std::cout << "Clicked\n";
+        if (ImGui::Button("Click Me!")){
+            temp.push_back(1);
         }
-
         ImGui::End();
+        
+        for(int i = 0; i < (int)temp.size(); i++){
+
+            std::string str = "##Window" + std::to_string(i);
+        
+            ImGui::Begin(str.c_str());
+            ImGui::Text("Hello Again!");
+            ImGui::End();
+        }
 
         window.clear();
         ImGui::SFML::Render(window);
