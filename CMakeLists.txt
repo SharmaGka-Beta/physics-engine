@@ -38,11 +38,14 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(imgui-sfml)
 
-add_executable(PhysicsEngine src/main.cpp)
+add_executable(PhysicsEngine 
+                        src/main.cpp
+                        src/ball.cpp)
 
 target_include_directories(PhysicsEngine
                         PRIVATE
-                            ${IMGUI_DIR}/misc/cpp)       
+                            ${IMGUI_DIR}/misc/cpp
+                            include)       
 
 target_link_libraries(PhysicsEngine 
                     PRIVATE
