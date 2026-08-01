@@ -4,6 +4,7 @@
 #include <imgui-SFML.h>
 #include <vector>
 #include <string>
+#include <imgui_stdlib.h>
 
 int main(){
 
@@ -11,12 +12,11 @@ int main(){
 
     sf::RenderWindow window(sf::VideoMode({800, 600}), "SFML - Physics Engine");
     
-    ImGui::SFML::Init(window);
+    (void)ImGui::SFML::Init(window);
 
     sf::Clock deltaClock;
 
-    std::vector <int> temp;
-
+    std::string temp;
 
     while(window.isOpen()){
         while(const auto event = window.pollEvent()){
@@ -30,19 +30,12 @@ int main(){
         ImGui::SFML::Update(window, deltaClock.restart());
         ImGui::Begin("Test Window");
         ImGui::Text("Hello ImGui!");
+        ImGui::InputText("##Inp", &temp);
         if (ImGui::Button("Click Me!")){
-            temp.push_back(1);
+            std::cout << temp << std::endl;
         }
         ImGui::End();
         
-        for(int i = 0; i < (int)temp.size(); i++){
-
-            std::string str = "##Window" + std::to_string(i);
-        
-            ImGui::Begin(str.c_str());
-            ImGui::Text("Hello Again!");
-            ImGui::End();
-        }
 
         window.clear();
         ImGui::SFML::Render(window);

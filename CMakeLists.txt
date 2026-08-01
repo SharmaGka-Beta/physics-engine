@@ -40,6 +40,10 @@ FetchContent_MakeAvailable(imgui-sfml)
 
 add_executable(PhysicsEngine src/main.cpp)
 
+target_include_directories(PhysicsEngine
+                        PRIVATE
+                            ${IMGUI_DIR}/misc/cpp)       
+
 target_link_libraries(PhysicsEngine 
                     PRIVATE
                         SFML::Graphics 
