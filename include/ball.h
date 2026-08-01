@@ -20,6 +20,9 @@ class Ball{
         void setVelocity(sf::Vector2f vel);
         void setAcceleration(sf::Vector2f acc);
         void update(float dt);
+
+        sf::Vector2f getPosition();
+        float getRadius();
 };
 
 Ball ballGenerator(float radius, sf::Vector2f position, sf::Vector2f velocity, sf::Vector2f acceleration);

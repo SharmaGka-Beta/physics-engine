@@ -31,6 +31,14 @@ void Ball::update(float dt){
     setShapePosition();
 }
 
+sf::Vector2f Ball::getPosition(){
+    return position;
+}
+
+float Ball::getRadius(){
+    return obj.getRadius();
+}
+
 
 Ball ballGenerator(float radius, sf::Vector2f position, sf::Vector2f velocity, sf::Vector2f acceleration){
 
