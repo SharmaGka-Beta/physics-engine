@@ -48,6 +48,10 @@ int main(){
             Ball ball = ballGenerator(radius, position, velocity, acceleration);
             ballArr.push_back(ball);
         }
+        ImGui::SameLine();
+        if (ImGui::Button("Clear")){
+            ballArr.clear();
+        }
         ImGui::End();
         
         window.clear();
