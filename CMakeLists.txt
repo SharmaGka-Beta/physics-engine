@@ -40,7 +40,8 @@ FetchContent_MakeAvailable(imgui-sfml)
 
 add_executable(PhysicsEngine 
                         src/main.cpp
-                        src/ball.cpp)
+                        src/ball.cpp
+                        src/application.cpp)
 
 target_include_directories(PhysicsEngine
                         PRIVATE
