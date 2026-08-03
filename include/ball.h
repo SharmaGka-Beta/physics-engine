@@ -1,10 +1,11 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "universal.h"
 
 inline const int PIXELS_PER_METER = 50;
 
-class Ball{
+class Ball : public Universal{
     private:
         sf::Vector2f position;
         sf::Vector2f velocity;

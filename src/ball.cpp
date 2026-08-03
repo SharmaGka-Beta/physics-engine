@@ -26,8 +26,8 @@ void Ball::setAcceleration(sf::Vector2f acc){
     acceleration = acc;
 }
 void Ball::update(float dt){
-    velocity = velocity + acceleration*dt;
-    position = position + velocity*dt;
+    velocity = velocity + (acceleration + getAccelerationUniversal())*dt;
+    position = position + (velocity + getVelocityUniversal())*dt;
     setShapePosition();
 }
 

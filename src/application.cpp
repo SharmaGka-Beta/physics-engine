@@ -5,6 +5,7 @@
 #include "ball.h"
 #include <vector>
 #include "application.h"
+#include "universal.h"
 
 void Application::run(){
 
@@ -21,7 +22,10 @@ void Application::run(){
 
     std::vector <Ball> ballArr;
 
+    bool gravityEnabled = false;
+
     while(window.isOpen()){
+
         while(const auto event = window.pollEvent()){
 
             ImGui::SFML::ProcessEvent(window, *event);
@@ -39,7 +43,17 @@ void Application::run(){
 
         ImGui::InputFloat2("Position", &position.x);         //both store x and y contiguosly so passing the x value will pass both
         ImGui::InputFloat2("Velocity", &velocity.x); 
-        ImGui::InputFloat2("Acceleration", &acceleration.x); 
+        ImGui::InputFloat2("Acceleration", &acceleration.x);
+        
+
+        ImGui::Checkbox("Enable Gravity", &gravityEnabled);
+
+        if (gravityEnabled){
+            Universal :: setAccelerationUniversal({0.f, static_cast <float> (9.8 * PIXELS_PER_METER)});
+        }
+        else{
+            Universal :: setAccelerationUniversal({0.f, 0.f});
+        }
 
         if (ImGui::Button("Simulate")){
             Ball ball = ballGenerator(radius, position, velocity, acceleration);
