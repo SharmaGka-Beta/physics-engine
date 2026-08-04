@@ -23,6 +23,7 @@ void Application::run(){
     std::vector <Ball> ballArr;
 
     bool gravityEnabled = false;
+    bool worldBorderEnabled = false;
 
     while(window.isOpen()){
 
@@ -47,6 +48,7 @@ void Application::run(){
         
 
         ImGui::Checkbox("Enable Gravity", &gravityEnabled);
+        ImGui::Checkbox("Enable World Borders", &worldBorderEnabled);
 
         if (gravityEnabled){
             Universal :: setAccelerationUniversal({0.f, static_cast <float> (9.8 * PIXELS_PER_METER)});
@@ -70,7 +72,11 @@ void Application::run(){
         for (int i = 0; i < (int)ballArr.size(); i++){
 
             ballArr[i].update(dt.asSeconds());
-            Collision::worldBorder(ballArr[i]);
+
+            if (worldBorderEnabled){
+                Collision::worldBorder(ballArr[i]);
+            }
+            
             ballArr[i].drawBall(window);
         }
         ImGui::SFML::Render(window);
