@@ -6,13 +6,13 @@
 #include <vector>
 #include "application.h"
 #include "universal.h"
+#include "constants.h"
+#include "collision.h"
 
 void Application::run(){
 
-    int length = 800;
-    int width = 600;
 
-    sf::RenderWindow window(sf::VideoMode({static_cast<unsigned int> (length), static_cast<unsigned int> (width)}), "SFML - Physics Engine");
+    sf::RenderWindow window(sf::VideoMode({WINDOW_LENGTH, WINDOW_WIDTH}), "SFML - Physics Engine");
 
     (void)ImGui::SFML::Init(window);
 
@@ -70,6 +70,7 @@ void Application::run(){
         for (int i = 0; i < (int)ballArr.size(); i++){
 
             ballArr[i].update(dt.asSeconds());
+            Collision::worldBorder(ballArr[i]);
             ballArr[i].drawBall(window);
         }
         ImGui::SFML::Render(window);

@@ -3,8 +3,6 @@
 #include <SFML/Graphics.hpp>
 #include "universal.h"
 
-inline const int PIXELS_PER_METER = 50;
-
 class Ball : public Universal{
     private:
         sf::Vector2f position;
@@ -23,6 +21,8 @@ class Ball : public Universal{
         void update(float dt);
 
         sf::Vector2f getPosition();
+        sf::Vector2f getVelocity();
+        
         float getRadius();
 };
 

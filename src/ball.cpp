@@ -1,4 +1,5 @@
 #include <ball.h>
+#include "constants.h"
 
 
 Ball::Ball(float radius){
@@ -26,6 +27,8 @@ void Ball::setAcceleration(sf::Vector2f acc){
     acceleration = acc;
 }
 void Ball::update(float dt){
+    
+    
     velocity = velocity + (acceleration + getAccelerationUniversal())*dt;
     position = position + (velocity + getVelocityUniversal())*dt;
     setShapePosition();
@@ -33,6 +36,10 @@ void Ball::update(float dt){
 
 sf::Vector2f Ball::getPosition(){
     return position;
+}
+
+sf::Vector2f Ball::getVelocity(){
+    return velocity;
 }
 
 float Ball::getRadius(){

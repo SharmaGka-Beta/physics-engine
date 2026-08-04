@@ -42,7 +42,8 @@ add_executable(PhysicsEngine
                         src/main.cpp
                         src/ball.cpp
                         src/application.cpp
-                        src/universal.cpp)
+                        src/universal.cpp
+                        src/collision.cpp)
 
 target_include_directories(PhysicsEngine
                         PRIVATE
