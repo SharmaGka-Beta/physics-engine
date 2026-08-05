@@ -13,7 +13,9 @@
 
 void Application::run(){
 
-    sf::RenderWindow window(sf::VideoMode({WINDOW_LENGTH, WINDOW_WIDTH}), "SFML - Physics Engine");
+    sf::RenderWindow window(sf::VideoMode({static_cast <unsigned int> (WINDOW_LENGTH* PIXELS_PER_METER), 
+                                            static_cast <unsigned int> (WINDOW_WIDTH * PIXELS_PER_METER)}), 
+                                            "SFML - Physics Engine");
 
     (void)ImGui::SFML::Init(window);
 
@@ -79,7 +81,7 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
     ImGui::Checkbox("Enable World Borders", &worldBorderEnabled);
 
     if (gravityEnabled){
-        Universal :: setAccelerationUniversal({0.f, static_cast <float> (9.8 * PIXELS_PER_METER)});
+        Universal :: setAccelerationUniversal({0.f, static_cast <float> (9.8)});
     }
     else{
         Universal :: setAccelerationUniversal({0.f, 0.f});
@@ -125,11 +127,12 @@ void Application::checkSelectedBall(sf::RenderWindow& window){
 
     sf::Vector2i mousePixel = sf::Mouse::getPosition(window);
 
-    if (mousePixel.x < 0 || mousePixel.x >= static_cast<int>(WINDOW_LENGTH) || mousePixel.y < 0 || mousePixel.y >= static_cast<int>(WINDOW_WIDTH)){
+    if (mousePixel.x < 0 || mousePixel.x >= static_cast<int>(WINDOW_LENGTH * PIXELS_PER_METER) || 
+        mousePixel.y < 0 || mousePixel.y >= static_cast<int>(WINDOW_WIDTH * PIXELS_PER_METER)){
         return;
     }
     
-    sf::Vector2f mousePosition = window.mapPixelToCoords(mousePixel);
+    sf::Vector2f mousePosition = window.mapPixelToCoords(mousePixel) / PIXELS_PER_METER;
 
     for(int i = 0; i < (int)ballArr.size(); i++){
 

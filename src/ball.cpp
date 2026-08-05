@@ -4,16 +4,16 @@
 
 
 Ball::Ball(float radius){
-    obj.setRadius(radius);
+    obj.setRadius(radius * PIXELS_PER_METER);
     obj.setFillColor(sf::Color::White);
-    obj.setOrigin({radius, radius});
+    obj.setOrigin({radius * PIXELS_PER_METER, radius * PIXELS_PER_METER});
 }
 
 void Ball::drawBall(sf::RenderWindow& window){        
     window.draw(obj);
 }                                                  //Top functions control the gui and observable ball. Bottom functions control the stored values.
 void Ball::setShapePosition(){
-    obj.setPosition(position);
+    obj.setPosition(position * PIXELS_PER_METER);
 }
 
 void Ball::setPosition(sf::Vector2f pos){
@@ -29,7 +29,6 @@ void Ball::setAcceleration(sf::Vector2f acc){
 }
 void Ball::update(float dt){
     
-    
     velocity = velocity + (acceleration + getAccelerationUniversal())*dt;
     position = position + (velocity + getVelocityUniversal())*dt;
     setShapePosition();
@@ -44,7 +43,7 @@ sf::Vector2f Ball::getVelocity(){
 }
 
 float Ball::getRadius(){
-    return obj.getRadius();
+    return obj.getRadius() / PIXELS_PER_METER;
 }
 std::unordered_map <std::string, sf::Vector2f*> Ball::getPointers(){
     return {{"position", &position},
@@ -55,10 +54,15 @@ std::unordered_map <std::string, sf::Vector2f*> Ball::getPointers(){
 
 Ball ballGenerator(float radius, sf::Vector2f position, sf::Vector2f velocity, sf::Vector2f acceleration){
 
-    radius = radius * PIXELS_PER_METER;
-    position = {position.x * PIXELS_PER_METER, position.y * PIXELS_PER_METER};
-    velocity = {velocity.x * PIXELS_PER_METER, velocity.y * PIXELS_PER_METER};
-    acceleration = {acceleration.x * PIXELS_PER_METER, acceleration.y * PIXELS_PER_METER};
+    // radius = radius * PIXELS_PER_METER;
+    // position = {position.x * PIXELS_PER_METER, position.y * PIXELS_PER_METER};
+    // velocity = {velocity.x * PIXELS_PER_METER, velocity.y * PIXELS_PER_METER};
+    // acceleration = {acceleration.x * PIXELS_PER_METER, acceleration.y * PIXELS_PER_METER};
+
+    radius = radius;
+    position = {position.x, position.y};
+    velocity = {velocity.x, velocity.y};
+    acceleration = {acceleration.x, acceleration.y};
 
     Ball ball(radius);
     ball.setPosition(position);
