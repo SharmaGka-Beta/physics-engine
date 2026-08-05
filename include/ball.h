@@ -5,10 +5,10 @@
 
 class Ball : public Universal{
     private:
-        sf::Vector2f position;
-        sf::Vector2f velocity;
-        sf::Vector2f acceleration;
-        sf::CircleShape obj;
+        sf::Vector2f position{};
+        sf::Vector2f velocity{};
+        sf::Vector2f acceleration{};
+        sf::CircleShape obj{};
     public:
         explicit Ball(float radius);
 
