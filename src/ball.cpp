@@ -1,5 +1,6 @@
 #include <ball.h>
 #include "constants.h"
+#include <string>
 
 
 Ball::Ball(float radius){
@@ -44,6 +45,11 @@ sf::Vector2f Ball::getVelocity(){
 
 float Ball::getRadius(){
     return obj.getRadius();
+}
+std::unordered_map <std::string, sf::Vector2f*> Ball::getPointers(){
+    return {{"position", &position},
+            {"velocity", &velocity},
+            {"acceleration", &acceleration}};
 }
 
 

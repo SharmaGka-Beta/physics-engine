@@ -8,6 +8,8 @@
 #include "universal.h"
 #include "constants.h"
 #include "collision.h"
+#include <iostream>
+#include <string>
 
 void Application::run(){
 
@@ -16,20 +18,16 @@ void Application::run(){
     (void)ImGui::SFML::Init(window);
 
     sf::Clock deltaClock;
-    // sf::Vector2f position, velocity, acceleration;
-    // float radius;
-
-    // std::vector <Ball> ballArr;
-
-    // bool gravityEnabled = false;
-    // bool worldBorderEnabled = false;
-
     while(window.isOpen()){
 
         runEvents(window);
         sf::Time dt = deltaClock.restart();
 
+        checkSelectedBall(window);
+
         setGui(window, dt);
+
+        window.clear();
 
         updateSimulation(window, dt);
 
@@ -54,15 +52,27 @@ void Application::runEvents(sf::RenderWindow& window){
 
 void Application::setGui(sf::RenderWindow& window, sf::Time dt){
 
+    float* pos = &position.x;
+    float* vel = &velocity.x;
+    float* acc = &acceleration.x;
+    std::string title = "Input Window";
+    
+    if (selectedBall != -1){
+        std::unordered_map <std::string, sf::Vector2f*> pointers = ballArr[selectedBall].getPointers();
+        pos = &pointers["position"] -> x;
+        vel = &pointers["velocity"] -> x;
+        acc = &pointers["acceleration"] -> x;
+        title = "Ball " + std::to_string(selectedBall);
+    }
+
     ImGui::SFML::Update(window, dt);
-    ImGui::Begin("Input Window");
+    ImGui::Begin(title.c_str());
 
     ImGui::InputFloat("Radius", &radius);
-    
 
-    ImGui::InputFloat2("Position", &position.x);         //both store x and y contiguosly so passing the x value will pass both
-    ImGui::InputFloat2("Velocity", &velocity.x); 
-    ImGui::InputFloat2("Acceleration", &acceleration.x);
+    ImGui::InputFloat2("Position", pos);         //both store x and y contiguosly so passing the x value will pass both
+    ImGui::InputFloat2("Velocity", vel); 
+    ImGui::InputFloat2("Acceleration", acc);
     
 
     ImGui::Checkbox("Enable Gravity", &gravityEnabled);
@@ -81,11 +91,11 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
     }
     ImGui::SameLine();
     if (ImGui::Button("Clear")){
+        selectedBall = -1;
         ballArr.clear();
     }
     ImGui::End();
     
-    window.clear();
 }
 
 void Application::updateSimulation(sf::RenderWindow& window, sf::Time dt){
@@ -100,6 +110,43 @@ void Application::updateSimulation(sf::RenderWindow& window, sf::Time dt){
         
         ballArr[i].drawBall(window);
     }
+
+}
+
+void Application::checkSelectedBall(sf::RenderWindow& window){
+
+    if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)){
+        return;
+    }
+
+    if (ImGui::GetIO().WantCaptureMouse){
+        return;
+    }
+
+    sf::Vector2i mousePixel = sf::Mouse::getPosition(window);
+
+    if (mousePixel.x < 0 || mousePixel.x >= static_cast<int>(WINDOW_LENGTH) || mousePixel.y < 0 || mousePixel.y >= static_cast<int>(WINDOW_WIDTH)){
+        return;
+    }
+    
+    sf::Vector2f mousePosition = window.mapPixelToCoords(mousePixel);
+
+    for(int i = 0; i < (int)ballArr.size(); i++){
+
+        sf::Vector2f position = ballArr[i].getPosition();
+
+        sf::Vector2f distanceVector = mousePosition - position;
+
+        float distance = (distanceVector.x * distanceVector.x) + (distanceVector.y * distanceVector.y);
+
+        float radius = ballArr[i].getRadius();
+
+        if (distance < radius * radius){
+            selectedBall = i;
+            return;
+        }
+    }
+    selectedBall = -1;
 
 }
 

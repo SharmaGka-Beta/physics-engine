@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 #include "universal.h"
+#include <unordered_map>
+#include <string>
 
 class Ball : public Universal{
     private:
@@ -24,6 +26,8 @@ class Ball : public Universal{
         sf::Vector2f getVelocity();
         
         float getRadius();
+
+        std::unordered_map <std::string, sf::Vector2f*> getPointers();
 };
 
 Ball ballGenerator(float radius, sf::Vector2f position, sf::Vector2f velocity, sf::Vector2f acceleration);

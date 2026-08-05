@@ -11,6 +11,7 @@ class Application{
         sf::Vector2f position{};
         sf::Vector2f velocity{};
         sf::Vector2f acceleration{};
+        int selectedBall = -1;
 
         float radius = 0.f;
 
@@ -23,8 +24,9 @@ class Application{
         void setGui(sf::RenderWindow& window, sf::Time dt);
         void updateSimulation(sf::RenderWindow& window, sf::Time dt);
 
-        
+        void checkSelectedBall(sf::RenderWindow& window);
 
+        
 
     public:
         void run();
