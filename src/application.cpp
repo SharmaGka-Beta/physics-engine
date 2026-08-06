@@ -58,22 +58,28 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
     float* vel = &velocity.x;
     float* acc = &acceleration.x;
     std::string title = "Input Window";
+
+    float rad;
     
     if (selectedBall != -1){
         std::unordered_map <std::string, sf::Vector2f*> pointers = ballArr[selectedBall].getPointers();
         pos = &pointers["position"] -> x;
         vel = &pointers["velocity"] -> x;
         acc = &pointers["acceleration"] -> x;
+        rad = ballArr[selectedBall].getRadius();
         title = "Ball " + std::to_string(selectedBall);
     }
 
     ImGui::SFML::Update(window, dt);
     ImGui::Begin(title.c_str());
 
-    ImGui::InputFloat("Radius", &radius);
-
     if (selectedBall != -1){
+        ImGui::InputFloat("Radius", &rad);
         ballArr[selectedBall].setRadius(radius);
+    }
+    else{
+        ImGui::InputFloat("Radius", &radius);
+    
     }
 
     ImGui::InputFloat2("Position", pos);         //both store x and y contiguosly so passing the x value will pass both

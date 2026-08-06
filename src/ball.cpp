@@ -60,11 +60,6 @@ std::unordered_map <std::string, sf::Vector2f*> Ball::getPointers(){
 
 Ball ballGenerator(float radius, sf::Vector2f position, sf::Vector2f velocity, sf::Vector2f acceleration){
 
-    // radius = radius * PIXELS_PER_METER;
-    // position = {position.x * PIXELS_PER_METER, position.y * PIXELS_PER_METER};
-    // velocity = {velocity.x * PIXELS_PER_METER, velocity.y * PIXELS_PER_METER};
-    // acceleration = {acceleration.x * PIXELS_PER_METER, acceleration.y * PIXELS_PER_METER};
-
     radius = radius;
     position = {position.x, position.y};
     velocity = {velocity.x, velocity.y};
