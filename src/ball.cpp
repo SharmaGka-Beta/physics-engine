@@ -27,6 +27,12 @@ void Ball::setVelocity(sf::Vector2f vel){
 void Ball::setAcceleration(sf::Vector2f acc){
     acceleration = acc;
 }
+
+void Ball::setRadius(float radius){
+    obj.setRadius(radius * PIXELS_PER_METER);
+    obj.setOrigin({radius * PIXELS_PER_METER, radius * PIXELS_PER_METER});
+}
+
 void Ball::update(float dt){
     
     velocity = velocity + (acceleration + getAccelerationUniversal())*dt;

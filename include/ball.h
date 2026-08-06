@@ -20,6 +20,7 @@ class Ball : public Universal{
         void setPosition(sf::Vector2f pos);
         void setVelocity(sf::Vector2f vel);
         void setAcceleration(sf::Vector2f acc);
+        void setRadius(float radius);
         void update(float dt);
 
         sf::Vector2f getPosition();

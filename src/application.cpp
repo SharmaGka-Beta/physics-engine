@@ -72,6 +72,10 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
 
     ImGui::InputFloat("Radius", &radius);
 
+    if (selectedBall != -1){
+        ballArr[selectedBall].setRadius(radius);
+    }
+
     ImGui::InputFloat2("Position", pos);         //both store x and y contiguosly so passing the x value will pass both
     ImGui::InputFloat2("Velocity", vel); 
     ImGui::InputFloat2("Acceleration", acc);
@@ -80,12 +84,6 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
     ImGui::Checkbox("Enable Gravity", &gravityEnabled);
     ImGui::Checkbox("Enable World Borders", &worldBorderEnabled);
 
-    // if (gravityEnabled){
-    //     Universal :: setAccelerationUniversal({0.f, static_cast <float> (9.8)});
-    // }
-    // else{
-    //     Universal :: setAccelerationUniversal({0.f, 0.f});
-    // }
 
     if (ImGui::Button("Simulate")){
         Ball ball = ballGenerator(radius, position, velocity, acceleration);
