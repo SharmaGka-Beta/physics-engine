@@ -80,12 +80,12 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
     ImGui::Checkbox("Enable Gravity", &gravityEnabled);
     ImGui::Checkbox("Enable World Borders", &worldBorderEnabled);
 
-    if (gravityEnabled){
-        Universal :: setAccelerationUniversal({0.f, static_cast <float> (9.8)});
-    }
-    else{
-        Universal :: setAccelerationUniversal({0.f, 0.f});
-    }
+    // if (gravityEnabled){
+    //     Universal :: setAccelerationUniversal({0.f, static_cast <float> (9.8)});
+    // }
+    // else{
+    //     Universal :: setAccelerationUniversal({0.f, 0.f});
+    // }
 
     if (ImGui::Button("Simulate")){
         Ball ball = ballGenerator(radius, position, velocity, acceleration);
@@ -101,6 +101,13 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
 }
 
 void Application::updateSimulation(sf::RenderWindow& window, sf::Time dt){
+
+    if (gravityEnabled){
+        Universal :: setAccelerationUniversal({0.f, static_cast <float> (9.8)});
+    }
+    else{
+        Universal :: setAccelerationUniversal({0.f, 0.f});
+    }
 
     for (int i = 0; i < (int)ballArr.size(); i++){
 
