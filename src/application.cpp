@@ -75,7 +75,7 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
 
     if (selectedBall != -1){
         ImGui::InputFloat("Radius", &rad);
-        ballArr[selectedBall].setRadius(radius);
+        ballArr[selectedBall].setRadius(rad);
     }
     else{
         ImGui::InputFloat("Radius", &radius);
