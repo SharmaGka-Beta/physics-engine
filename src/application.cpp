@@ -90,6 +90,10 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
     ImGui::Checkbox("Enable Gravity", &gravityEnabled);
     ImGui::Checkbox("Enable World Borders", &worldBorderEnabled);
 
+    if (worldBorderEnabled){
+        ImGui::InputFloat("Coeff of Restitution", &coeffRestitution);
+    }
+
 
     if (ImGui::Button("Simulate")){
         Ball ball = ballGenerator(radius, position, velocity, acceleration);
@@ -118,7 +122,7 @@ void Application::updateSimulation(sf::RenderWindow& window, sf::Time dt){
         ballArr[i].update(dt.asSeconds());
 
         if (worldBorderEnabled){
-            Collision::worldBorder(ballArr[i]);
+            Collision::worldBorder(ballArr[i], coeffRestitution);
         }
         
         ballArr[i].drawBall(window);

@@ -15,6 +15,8 @@ class Application{
 
         float radius = 0.f;
 
+        float coeffRestitution = 1;
+
         std::vector <Ball> ballArr;
 
         bool gravityEnabled = false;
