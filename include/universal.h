@@ -11,8 +11,8 @@ class Universal{
 
     public:
 
-        static void setVelocityUniversal(sf::Vector2f vel);
-        static void setAccelerationUniversal(sf::Vector2f acc);
+        static void setVelocityUniversal(sf::Vector2f);
+        static void setAccelerationUniversal(sf::Vector2f);
         sf::Vector2f getVelocityUniversal();
         sf::Vector2f getAccelerationUniversal();
 };

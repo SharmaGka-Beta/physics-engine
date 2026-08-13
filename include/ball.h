@@ -12,16 +12,16 @@ class Ball : public Universal{
         sf::Vector2f acceleration{};
         sf::CircleShape obj{};
     public:
-        explicit Ball(float radius);
+        explicit Ball(float);
 
-        void drawBall(sf::RenderWindow& window);
+        void drawBall(sf::RenderWindow&);
         void setShapePosition();
 
-        void setPosition(sf::Vector2f pos);
-        void setVelocity(sf::Vector2f vel);
-        void setAcceleration(sf::Vector2f acc);
-        void setRadius(float radius);
-        void update(float dt);
+        void setPosition(sf::Vector2f);
+        void setVelocity(sf::Vector2f);
+        void setAcceleration(sf::Vector2f);
+        void setRadius(float);
+        void update(float);
 
         sf::Vector2f getPosition();
         sf::Vector2f getVelocity();
@@ -31,4 +31,4 @@ class Ball : public Universal{
         std::unordered_map <std::string, sf::Vector2f*> getPointers();
 };
 
-Ball ballGenerator(float radius, sf::Vector2f position, sf::Vector2f velocity, sf::Vector2f acceleration);
+Ball ballGenerator(float, sf::Vector2f, sf::Vector2f, sf::Vector2f);

@@ -22,11 +22,11 @@ class Application{
         bool gravityEnabled = false;
         bool worldBorderEnabled = false;
 
-        void runEvents(sf::RenderWindow& window);
-        void setGui(sf::RenderWindow& window, sf::Time dt);
-        void updateSimulation(sf::RenderWindow& window, sf::Time dt);
+        void runEvents(sf::RenderWindow&);
+        void setGui(sf::RenderWindow&, sf::Time);
+        void updateSimulation(sf::RenderWindow&, sf::Time);
 
-        void checkSelectedBall(sf::RenderWindow& window);
+        void checkSelectedBall(sf::RenderWindow&);
 
         
 

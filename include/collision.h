@@ -6,5 +6,5 @@
 class Collision{
 
     public:
-        static void worldBorder(Ball& ball, float coeffRestitution);
+        static void worldBorder(Ball&, float);
 };
