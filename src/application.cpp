@@ -109,6 +109,14 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
         selectedBall = -1;
         ballArr.clear();
     }
+
+    if (selectedBall != -1){
+        if (ImGui::Button("Delete")){
+            ballArr.erase(ballArr.begin() + selectedBall);
+            selectedBall = -1;
+        }
+    }
+
     ImGui::End();
     
 }
