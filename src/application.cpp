@@ -61,7 +61,9 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
 
     float rad;
     
+    
     if (selectedBall != -1){
+        
         std::unordered_map <std::string, sf::Vector2f*> pointers = ballArr[selectedBall].getPointers();
         pos = &pointers["position"] -> x;
         vel = &pointers["velocity"] -> x;
@@ -69,7 +71,7 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
         rad = ballArr[selectedBall].getRadius();
         title = "Ball " + std::to_string(selectedBall);
     }
-
+    
     ImGui::SFML::Update(window, dt);
     ImGui::Begin(title.c_str());
 
@@ -87,15 +89,18 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
     ImGui::InputFloat2("Acceleration", acc);
     
 
-    ImGui::Checkbox("Enable Gravity", &gravityEnabled);
-    ImGui::Checkbox("Enable World Borders", &worldBorderEnabled);
+    if (selectedBall == -1){
 
-    if (worldBorderEnabled){
+        ImGui::Checkbox("Enable Gravity", &gravityEnabled);
+        ImGui::Checkbox("Enable World Borders", &worldBorderEnabled);
+    }
+
+    if (worldBorderEnabled && selectedBall == -1){
         ImGui::InputFloat("Coeff of Restitution", &coeffRestitution);
     }
 
 
-    if (ImGui::Button("Simulate")){
+    if (selectedBall == -1 && ImGui::Button("Simulate")){
         Ball ball = ballGenerator(radius, position, velocity, acceleration);
         ballArr.push_back(ball);
     }
