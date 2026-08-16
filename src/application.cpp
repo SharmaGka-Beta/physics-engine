@@ -57,6 +57,7 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
     float* pos = &position.x;
     float* vel = &velocity.x;
     float* acc = &acceleration.x;
+    int* m = &mass;
     std::string title = "Input Window";
 
     float rad;
@@ -65,9 +66,13 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
     if (selectedBall != -1){
         
         std::unordered_map <std::string, sf::Vector2f*> pointers = ballArr[selectedBall].getPointers();
+        std::unordered_map <std::string, int*> pointersInt = ballArr[selectedBall].getPointersInt();
+
         pos = &pointers["position"] -> x;
         vel = &pointers["velocity"] -> x;
         acc = &pointers["acceleration"] -> x;
+        m = pointersInt["mass"];
+
         rad = ballArr[selectedBall].getRadius();
         title = "Ball " + std::to_string(selectedBall);
     }
@@ -87,6 +92,7 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
     ImGui::InputFloat2("Position", pos);         //both store x and y contiguosly so passing the x value will pass both
     ImGui::InputFloat2("Velocity", vel); 
     ImGui::InputFloat2("Acceleration", acc);
+    ImGui::InputInt("Mass", m);
     
 
     if (selectedBall == -1){
@@ -101,12 +107,11 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
 
 
     if (selectedBall == -1 && ImGui::Button("Simulate")){
-        Ball ball = ballGenerator(radius, position, velocity, acceleration);
+        Ball ball = ballGenerator(radius, position, velocity, acceleration, mass);
         ballArr.push_back(ball);
     }
     ImGui::SameLine();
-    if (ImGui::Button("Clear")){
-        selectedBall = -1;
+    if (selectedBall == -1 && ImGui::Button("Clear")){
         ballArr.clear();
     }
 

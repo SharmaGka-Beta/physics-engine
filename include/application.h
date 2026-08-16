@@ -11,6 +11,7 @@ class Application{
         sf::Vector2f position{};
         sf::Vector2f velocity{};
         sf::Vector2f acceleration{};
+        int mass = 1;
         int selectedBall = -1;
 
         float radius = 0.f;
