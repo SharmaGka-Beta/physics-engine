@@ -40,7 +40,7 @@ void Ball::update(float dt){
     setShapePosition();
 }
 
-void Ball::setMass(int m){
+void Ball::setMass(float m){
     mass = m;
 }
 
@@ -55,6 +55,11 @@ sf::Vector2f Ball::getVelocity(){
 float Ball::getRadius(){
     return obj.getRadius() / PIXELS_PER_METER;
 }
+
+float Ball::getMass(){
+    return mass;
+}
+
 std::unordered_map <std::string, sf::Vector2f*> Ball::getPointers(){
     return {{"position", &position},
             {"velocity", &velocity},
@@ -62,12 +67,12 @@ std::unordered_map <std::string, sf::Vector2f*> Ball::getPointers(){
             };
 }
 
-std::unordered_map <std::string, int*> Ball::getPointersInt(){
+std::unordered_map <std::string, float*> Ball::getPointersFloat(){
     return {{"mass", &mass}};
 }
 
 
-Ball ballGenerator(float radius, sf::Vector2f position, sf::Vector2f velocity, sf::Vector2f acceleration, int mass){
+Ball ballGenerator(float radius, sf::Vector2f position, sf::Vector2f velocity, sf::Vector2f acceleration, float mass){
 
     radius = radius;
     position = {position.x, position.y};

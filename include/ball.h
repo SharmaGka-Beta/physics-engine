@@ -7,11 +7,13 @@
 
 class Ball : public Universal{
     private:
+
         sf::Vector2f position{};
         sf::Vector2f velocity{};
         sf::Vector2f acceleration{};
         sf::CircleShape obj{};
-        int mass = 1;
+        float mass = 1.f;
+
     public:
         explicit Ball(float);
 
@@ -22,18 +24,18 @@ class Ball : public Universal{
         void setVelocity(sf::Vector2f);
         void setAcceleration(sf::Vector2f);
         void setRadius(float);
-        void setMass(int);
+        void setMass(float);
         
         void update(float);
 
         sf::Vector2f getPosition();
         sf::Vector2f getVelocity();
-        
         float getRadius();
+        float getMass();
 
         std::unordered_map <std::string, sf::Vector2f*> getPointers();
-        std::unordered_map <std::string, int*> getPointersInt();
+        std::unordered_map <std::string, float*> getPointersFloat();
 
 };
 
-Ball ballGenerator(float, sf::Vector2f, sf::Vector2f, sf::Vector2f, int);
+Ball ballGenerator(float, sf::Vector2f, sf::Vector2f, sf::Vector2f, float);

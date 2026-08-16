@@ -57,7 +57,7 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
     float* pos = &position.x;
     float* vel = &velocity.x;
     float* acc = &acceleration.x;
-    int* m = &mass;
+    float* m = &mass;
     std::string title = "Input Window";
 
     float rad;
@@ -66,12 +66,12 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
     if (selectedBall != -1){
         
         std::unordered_map <std::string, sf::Vector2f*> pointers = ballArr[selectedBall].getPointers();
-        std::unordered_map <std::string, int*> pointersInt = ballArr[selectedBall].getPointersInt();
+        std::unordered_map <std::string, float*> pointersFloat = ballArr[selectedBall].getPointersFloat();
 
         pos = &pointers["position"] -> x;
         vel = &pointers["velocity"] -> x;
         acc = &pointers["acceleration"] -> x;
-        m = pointersInt["mass"];
+        m = pointersFloat["mass"];
 
         rad = ballArr[selectedBall].getRadius();
         title = "Ball " + std::to_string(selectedBall);
@@ -92,17 +92,21 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
     ImGui::InputFloat2("Position", pos);         //both store x and y contiguosly so passing the x value will pass both
     ImGui::InputFloat2("Velocity", vel); 
     ImGui::InputFloat2("Acceleration", acc);
-    ImGui::InputInt("Mass", m);
+    ImGui::InputFloat("Mass", m);
     
 
     if (selectedBall == -1){
 
         ImGui::Checkbox("Enable Gravity", &gravityEnabled);
         ImGui::Checkbox("Enable World Borders", &worldBorderEnabled);
+        ImGui::Checkbox("Enable Collisions", &collisionEnabled);
     }
 
     if (worldBorderEnabled && selectedBall == -1){
-        ImGui::InputFloat("Coeff of Restitution", &coeffRestitution);
+        ImGui::InputFloat("Restitution (Border)", &resBorder);
+    }
+    if (collisionEnabled && selectedBall == -1){
+        ImGui::InputFloat("Restitution (Ball)", &resBall);
     }
 
 
@@ -140,7 +144,14 @@ void Application::updateSimulation(sf::RenderWindow& window, sf::Time dt){
         ballArr[i].update(dt.asSeconds());
 
         if (worldBorderEnabled){
-            Collision::worldBorder(ballArr[i], coeffRestitution);
+            Collision::worldBorder(ballArr[i], resBorder);
+        }
+
+        if (collisionEnabled){
+
+            for(int j = i + 1; j < (int)ballArr.size(); j++){
+                Collision::ballToBall(ballArr[i], ballArr[j], resBall);
+            }
         }
         
         ballArr[i].drawBall(window);

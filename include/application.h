@@ -11,17 +11,19 @@ class Application{
         sf::Vector2f position{};
         sf::Vector2f velocity{};
         sf::Vector2f acceleration{};
-        int mass = 1;
+        float mass = 1.f;
         int selectedBall = -1;
 
         float radius = 0.f;
 
-        float coeffRestitution = 1;
+        float resBorder = 1;
+        float resBall = 1;
 
         std::vector <Ball> ballArr;
 
         bool gravityEnabled = false;
         bool worldBorderEnabled = false;
+        bool collisionEnabled = false;
 
         void runEvents(sf::RenderWindow&);
         void setGui(sf::RenderWindow&, sf::Time);
