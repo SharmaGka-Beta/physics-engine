@@ -12,14 +12,15 @@ class Application{
         sf::Vector2f velocity{};
         sf::Vector2f acceleration{};
         float mass = 1.f;
-        int selectedBall = -1;
+        std::vector <int> selectedBall = {-1, -1};
 
         float radius = 0.f;
 
         float resBorder = 1;
         float resBall = 1;
 
-        std::vector <Ball> ballArr;
+        std::vector <Ball> ballArr;         // termed as 1 for selectedBall
+        std::vector <Ball> ballBuffer;      // termed as 0 for selectedBall
 
         bool gravityEnabled = false;
         bool worldBorderEnabled = false;
@@ -30,6 +31,8 @@ class Application{
         void updateSimulation(sf::RenderWindow&, sf::Time);
 
         void checkSelectedBall(sf::RenderWindow&);
+        bool checkClick(std::vector <Ball>, int, sf::Vector2f);
+        std::vector <Ball>& findArr(int);
 
         
 

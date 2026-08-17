@@ -63,26 +63,37 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
     float rad;
     
     
-    if (selectedBall != -1){
+    if (selectedBall[0] != -1){
+
+        std::vector <Ball>& arr = findArr(selectedBall[0]);
         
-        std::unordered_map <std::string, sf::Vector2f*> pointers = ballArr[selectedBall].getPointers();
-        std::unordered_map <std::string, float*> pointersFloat = ballArr[selectedBall].getPointersFloat();
+        std::unordered_map <std::string, sf::Vector2f*> pointers = arr[selectedBall[1]].getPointers();
+        std::unordered_map <std::string, float*> pointersFloat = arr[selectedBall[1]].getPointersFloat();
 
         pos = &pointers["position"] -> x;
         vel = &pointers["velocity"] -> x;
         acc = &pointers["acceleration"] -> x;
         m = pointersFloat["mass"];
 
-        rad = ballArr[selectedBall].getRadius();
-        title = "Ball " + std::to_string(selectedBall);
+        rad = arr[selectedBall[1]].getRadius();
+
+        if (selectedBall[0] == 0){
+            title = "Ball " + std::to_string(selectedBall[1]) + " (Buffer)";
+        }
+        else if(selectedBall[0] == 1){
+            title = "Ball " + std::to_string(selectedBall[1]) + " (Array)";
+        }
     }
     
     ImGui::SFML::Update(window, dt);
     ImGui::Begin(title.c_str());
 
-    if (selectedBall != -1){
+    if (selectedBall[0] != -1){
         ImGui::InputFloat("Radius", &rad);
-        ballArr[selectedBall].setRadius(rad);
+
+        std::vector <Ball>& arr = findArr(selectedBall[0]);
+        arr[selectedBall[1]].setRadius(rad);
+
     }
     else{
         ImGui::InputFloat("Radius", &radius);
@@ -95,39 +106,72 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
     ImGui::InputFloat("Mass", m);
     
 
-    if (selectedBall == -1){
+    if (selectedBall[0] == -1){
 
         ImGui::Checkbox("Enable Gravity", &gravityEnabled);
         ImGui::Checkbox("Enable World Borders", &worldBorderEnabled);
         ImGui::Checkbox("Enable Collisions", &collisionEnabled);
     }
 
-    if (worldBorderEnabled && selectedBall == -1){
+    if (worldBorderEnabled && selectedBall[0] == -1){
         ImGui::InputFloat("Restitution (Border)", &resBorder);
     }
-    if (collisionEnabled && selectedBall == -1){
+    if (collisionEnabled && selectedBall[0] == -1){
         ImGui::InputFloat("Restitution (Ball)", &resBall);
     }
 
 
-    if (selectedBall == -1 && ImGui::Button("Simulate")){
+    if (selectedBall[0] == -1 && ImGui::Button("Add")){
         Ball ball = ballGenerator(radius, position, velocity, acceleration, mass);
-        ballArr.push_back(ball);
-    }
-    ImGui::SameLine();
-    if (selectedBall == -1 && ImGui::Button("Clear")){
-        ballArr.clear();
+        ballBuffer.push_back(ball);
     }
 
-    if (selectedBall != -1){
-        if (ImGui::Button("Delete")){
-            ballArr.erase(ballArr.begin() + selectedBall);
-            selectedBall = -1;
+    if (selectedBall[0] == -1 && ImGui::Button("Simulate")){
+
+        for(int i = 0; i < (int)ballBuffer.size(); i++){
+            ballArr.push_back(ballBuffer[i]);
         }
+        ballBuffer.clear();
+    }
+
+    ImGui::SameLine();
+    if (selectedBall[0] == -1 && ImGui::Button("Clear")){
+        ballArr.clear();
+        ballBuffer.clear();
+    }
+
+    if (selectedBall[0] != -1){
+        if (ImGui::Button("Delete")){
+
+            std::vector <Ball>& arr = findArr(selectedBall[0]);
+            arr.erase(arr.begin() + selectedBall[1]);
+
+            selectedBall[0] = -1;
+            selectedBall[1] = -1;
+        }
+    }
+    if (selectedBall[0] == 0 && ImGui::Button("Simulate")){
+
+        ballArr.push_back(ballBuffer[selectedBall[1]]);
+        ballBuffer.erase(ballBuffer.begin() + selectedBall[1]);
+
+        selectedBall[0] = -1;
+        selectedBall[1] = -1;
     }
 
     ImGui::End();
     
+}
+
+std::vector<Ball>& Application::findArr(int id){
+
+    if (id == 0){
+        return ballBuffer;
+    }
+    if (id == 1){
+        return ballArr;
+    }
+    throw std::invalid_argument("findArr: Invalid id");
 }
 
 void Application::updateSimulation(sf::RenderWindow& window, sf::Time dt){
@@ -157,6 +201,35 @@ void Application::updateSimulation(sf::RenderWindow& window, sf::Time dt){
         ballArr[i].drawBall(window);
     }
 
+    for(int i = 0; i < (int)ballBuffer.size(); i++){
+        ballBuffer[i].setShapePosition();
+        ballBuffer[i].drawBall(window);
+    }
+
+}
+
+bool Application::checkClick(std::vector <Ball> arr, int id, sf::Vector2f mousePosition){
+
+    for(int i = 0; i < (int)arr.size(); i++){
+
+        sf::Vector2f position = arr[i].getPosition();
+        
+        sf::Vector2f distanceVector = mousePosition - position;
+
+        float distance = (distanceVector.x * distanceVector.x) + (distanceVector.y * distanceVector.y);
+
+        float radius = arr[i].getRadius();
+
+        if (distance < radius*radius){
+            selectedBall[0] = id;
+            selectedBall[1] = i;
+            return true;
+        }
+
+    }
+
+    return false;
+
 }
 
 void Application::checkSelectedBall(sf::RenderWindow& window){
@@ -178,22 +251,17 @@ void Application::checkSelectedBall(sf::RenderWindow& window){
     
     sf::Vector2f mousePosition = window.mapPixelToCoords(mousePixel) / PIXELS_PER_METER;
 
-    for(int i = 0; i < (int)ballArr.size(); i++){
 
-        sf::Vector2f position = ballArr[i].getPosition();
-
-        sf::Vector2f distanceVector = mousePosition - position;
-
-        float distance = (distanceVector.x * distanceVector.x) + (distanceVector.y * distanceVector.y);
-
-        float radius = ballArr[i].getRadius();
-
-        if (distance < radius * radius){
-            selectedBall = i;
-            return;
-        }
+    if (checkClick(ballBuffer, 0, mousePosition)){
+        return;
     }
-    selectedBall = -1;
+    
+    if (checkClick(ballArr, 1, mousePosition)){
+        return;
+    }
+    
+    selectedBall[0] = -1;
+    selectedBall[1] = -1;
 
 }
 
