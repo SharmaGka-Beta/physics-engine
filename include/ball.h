@@ -4,8 +4,9 @@
 #include "universal.h"
 #include <unordered_map>
 #include <string>
+#include "entity.h"
 
-class Ball : public Universal{
+class Ball : public Universal, public Entity{
     private:
 
         sf::Vector2f position{};
