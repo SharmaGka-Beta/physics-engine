@@ -107,9 +107,22 @@ void Application::mainGui(){
         }
         ballArr.clear();
     }
+    ImGui::SameLine();
+
     if (ImGui::Button("Clear")){
         ballArr.clear();
         ballBuffer.clear();
+    }
+
+    if (ImGui::Button("Save")){
+        save();
+    }
+    ImGui::SameLine();
+
+    if (!(saveArr.empty() && saveBuffer.empty())){
+        if (ImGui::Button("Load")){
+            loadSave();
+        }
     }
 
     ImGui::End();
@@ -205,6 +218,17 @@ void Application::ballEditGui(){
     }
 
     ImGui::End();
+
+}
+
+void Application::save(){
+    saveArr = ballArr;
+    saveBuffer = ballBuffer;
+}
+
+void Application::loadSave(){
+    ballArr = saveArr;
+    ballBuffer = saveBuffer;
 
 }
 

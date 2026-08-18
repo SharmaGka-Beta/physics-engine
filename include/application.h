@@ -21,6 +21,8 @@ class Application{
 
         std::vector <Ball> ballArr;         // termed as 1 for selectedBall
         std::vector <Ball> ballBuffer;      // termed as 0 for selectedBall
+        std::vector <Ball> saveArr;
+        std::vector <Ball> saveBuffer;
 
         bool gravityEnabled = false;
         bool worldBorderEnabled = false;
@@ -34,6 +36,9 @@ class Application{
         void ballAddGui();
         void mainGui();
         void moveWithKeys();
+        
+        void save();
+        void loadSave();
 
         void checkSelectedBall(sf::RenderWindow&);
         bool checkClick(std::vector <Ball>, int, sf::Vector2f);
