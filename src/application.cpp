@@ -184,9 +184,10 @@ void Application::ballEditGui(){
     arr[selectedBall[1]].setRadius(rad);
 
     if (ImGui::Button("Simulate")){
+        
         ballArr.push_back(ballBuffer[selectedBall[1]]);
         ballBuffer.erase(ballBuffer.begin() + selectedBall[1]);
-
+        
         selectedBall[0] = -1;
         selectedBall[1] = -1;
     }
@@ -199,8 +200,9 @@ void Application::ballEditGui(){
         selectedBall[0] = -1;
         selectedBall[1] = -1;
     }
-
-    moveWithKeys();
+    if (selectedBall[0] != -1){
+        moveWithKeys();
+    }
 
     ImGui::End();
 
