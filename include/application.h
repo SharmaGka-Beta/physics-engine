@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include "ball.h"
+#include "entity.h"
 
 class Application{
 
