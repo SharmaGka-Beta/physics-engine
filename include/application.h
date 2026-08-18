@@ -33,6 +33,7 @@ class Application{
         void ballEditGui();
         void ballAddGui();
         void mainGui();
+        void moveWithKeys();
 
         void checkSelectedBall(sf::RenderWindow&);
         bool checkClick(std::vector <Ball>, int, sf::Vector2f);

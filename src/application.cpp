@@ -200,6 +200,8 @@ void Application::ballEditGui(){
         selectedBall[1] = -1;
     }
 
+    moveWithKeys();
+
     ImGui::End();
 
 }
@@ -272,6 +274,37 @@ bool Application::checkClick(std::vector <Ball> arr, int id, sf::Vector2f mouseP
 
     return false;
 
+}
+
+void Application::moveWithKeys(){
+
+    std::vector <Ball>& arr = findArr(selectedBall[0]);
+    sf::Vector2f pos = arr[selectedBall[1]].getPosition();
+
+
+    float delx = 0;
+    float dely = 0;
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)){
+
+        delx += 0.001f;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)){
+
+        delx -= 0.001f;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)){
+
+        dely -= 0.001f;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)){
+
+        dely += 0.001f;
+    }
+    arr[selectedBall[1]].setPosition({pos.x + delx, pos.y + dely});
 }
 
 void Application::checkSelectedBall(sf::RenderWindow& window){
