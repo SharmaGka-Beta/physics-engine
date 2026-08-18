@@ -44,7 +44,8 @@ add_executable(PhysicsEngine
                         src/application.cpp
                         src/universal.cpp
                         src/collision.cpp
-                        src/entity.cpp)
+                        src/entity.cpp
+                        src/wall.cpp)
 
 target_include_directories(PhysicsEngine
                         PRIVATE
