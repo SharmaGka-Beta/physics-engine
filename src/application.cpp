@@ -100,7 +100,14 @@ void Application::mainGui(){
     }
 
     ImGui::SameLine();
-    if (selectedBall[0] == -1 && ImGui::Button("Clear")){
+
+    if (ImGui::Button("Pause")){
+        for(int i = 0; i < (int)ballArr.size(); i++){
+            ballBuffer.push_back(ballArr[i]);
+        }
+        ballArr.clear();
+    }
+    if (ImGui::Button("Clear")){
         ballArr.clear();
         ballBuffer.clear();
     }
