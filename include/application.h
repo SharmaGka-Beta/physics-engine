@@ -25,10 +25,14 @@ class Application{
         bool gravityEnabled = false;
         bool worldBorderEnabled = false;
         bool collisionEnabled = false;
+        bool displayAddGui = false;
 
         void runEvents(sf::RenderWindow&);
         void setGui(sf::RenderWindow&, sf::Time);
         void updateSimulation(sf::RenderWindow&, sf::Time);
+        void ballEditGui();
+        void ballAddGui();
+        void mainGui();
 
         void checkSelectedBall(sf::RenderWindow&);
         bool checkClick(std::vector <Ball>, int, sf::Vector2f);
