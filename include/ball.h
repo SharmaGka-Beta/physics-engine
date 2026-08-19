@@ -9,7 +9,6 @@
 class Ball : public Universal, public Entity{
     private:
 
-        sf::Vector2f position{};
         sf::Vector2f velocity{};
         sf::Vector2f acceleration{};
         sf::CircleShape obj{};
@@ -18,10 +17,10 @@ class Ball : public Universal, public Entity{
     public:
         explicit Ball(float);
 
-        void drawBall(sf::RenderWindow&);
-        void setShapePosition();
+        Ball(const Ball& other);
 
-        void setPosition(sf::Vector2f);
+        std::unique_ptr<Entity> clone() const override;
+
         void setVelocity(sf::Vector2f);
         void setAcceleration(sf::Vector2f);
         void setRadius(float);
@@ -29,14 +28,13 @@ class Ball : public Universal, public Entity{
         
         void update(float);
 
-        sf::Vector2f getPosition();
         sf::Vector2f getVelocity();
         float getRadius();
         float getMass();
 
-        std::unordered_map <std::string, sf::Vector2f*> getPointers();
-        std::unordered_map <std::string, float*> getPointersFloat();
+        std::unordered_map <std::string, sf::Vector2f*> getPointersVectors() override;
+        std::unordered_map <std::string, float*> getPointersFloat() override;
 
 };
 
-Ball ballGenerator(float, sf::Vector2f, sf::Vector2f, sf::Vector2f, float);
+std::unique_ptr<Ball> ballGenerator(float, sf::Vector2f, sf::Vector2f, sf::Vector2f, float);

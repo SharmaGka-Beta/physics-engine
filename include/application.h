@@ -20,10 +20,10 @@ class Application{
         float resBorder = 1;
         float resBall = 1;
 
-        std::vector <Ball> ballArr;         // termed as 1 for selectedBall
-        std::vector <Ball> ballBuffer;      // termed as 0 for selectedBall
-        std::vector <Ball> saveArr;
-        std::vector <Ball> saveBuffer;
+        std::vector <std::unique_ptr <Entity>> entityArr;         // termed as 1 for selectedBall
+        std::vector <std::unique_ptr <Entity>> entityBuffer;      // termed as 0 for selectedBall
+        std::vector <std::unique_ptr <Entity>> saveArr;
+        std::vector <std::unique_ptr <Entity>> saveBuffer;
 
         bool gravityEnabled = false;
         bool worldBorderEnabled = false;
@@ -33,8 +33,11 @@ class Application{
         void runEvents(sf::RenderWindow&);
         void setGui(sf::RenderWindow&, sf::Time);
         void updateSimulation(sf::RenderWindow&, sf::Time);
+
         void ballEditGui();
         void ballAddGui();
+        void wallAddGui();
+
         void mainGui();
         void moveWithKeys();
         
@@ -42,8 +45,8 @@ class Application{
         void loadSave();
 
         void checkSelectedBall(sf::RenderWindow&);
-        bool checkClick(std::vector <Ball>, int, sf::Vector2f);
-        std::vector <Ball>& findArr(int);
+        bool checkClick(std::vector <std::unique_ptr <Entity>>&, int, sf::Vector2f);
+        std::vector <std::unique_ptr <Entity>>& findArr(int);
 
         
 

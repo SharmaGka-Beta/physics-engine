@@ -35,7 +35,7 @@ void Collision :: worldBorder(Ball& ball, float coeffRestitution){
     ball.setVelocity(velocity);
 }
 
-void Collision::ballToBall(Ball& ball1, Ball& ball2, float e){
+void Collision::ballToBall(Entity& ball1, Entity& ball2, float e){
 
     sf::Vector2f pos1 = ball1.getPosition();
     sf::Vector2f pos2 = ball2.getPosition();

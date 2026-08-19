@@ -93,25 +93,25 @@ void Application::mainGui(){
 
     if (ImGui::Button("Simulate")){
 
-        for(int i = 0; i < (int)ballBuffer.size(); i++){
-            ballArr.push_back(ballBuffer[i]);
+        for(int i = 0; i < (int)entityBuffer.size(); i++){
+            entityArr.push_back(std::move(entityBuffer[i]));
         }
-        ballBuffer.clear();
+        entityBuffer.clear();
     }
 
     ImGui::SameLine();
 
     if (ImGui::Button("Pause")){
-        for(int i = 0; i < (int)ballArr.size(); i++){
-            ballBuffer.push_back(ballArr[i]);
+        for(int i = 0; i < (int)entityArr.size(); i++){
+            entityBuffer.push_back(std::move(entityArr[i]));
         }
-        ballArr.clear();
+        entityArr.clear();
     }
     ImGui::SameLine();
 
     if (ImGui::Button("Clear")){
-        ballArr.clear();
-        ballBuffer.clear();
+        entityArr.clear();
+        entityBuffer.clear();
     }
 
     if (ImGui::Button("Save")){
@@ -147,13 +147,13 @@ void Application::ballAddGui(){
     ImGui::InputFloat("Mass", m);
 
     if (ImGui::Button("Add")){
-        Ball ball = ballGenerator(radius, position, velocity, acceleration, mass);
-        ballBuffer.push_back(ball);
+        auto ball = ballGenerator(radius, position, velocity, acceleration, mass);
+        entityBuffer.push_back(std::move(ball));
     }
     ImGui::SameLine();
     if (ImGui::Button("Simulate")){
-        Ball ball = ballGenerator(radius, position, velocity, acceleration, mass);
-        ballArr.push_back(ball);
+        auto ball = ballGenerator(radius, position, velocity, acceleration, mass);
+        entityArr.push_back(std::move(ball));
     }
 
     if (ImGui::Button("Back")){
@@ -164,11 +164,15 @@ void Application::ballAddGui(){
 
 }
 
+void Application::wallAddGui(){
+
+}
+
 void Application::ballEditGui(){
 
-    std::vector <Ball>& arr = findArr(selectedBall[0]);
+    std::vector <std::unique_ptr <Entity>>& arr = findArr(selectedBall[0]);
         
-    std::unordered_map <std::string, sf::Vector2f*> pointers = arr[selectedBall[1]].getPointers();
+    std::unordered_map <std::string, sf::Vector2f*> pointers = arr[selectedBall[1]].getPointersVectors();
     std::unordered_map <std::string, float*> pointersFloat = arr[selectedBall[1]].getPointersFloat();
     
     float* pos = &pointers["position"] -> x;
@@ -198,8 +202,8 @@ void Application::ballEditGui(){
 
     if (ImGui::Button("Simulate")){
         
-        ballArr.push_back(ballBuffer[selectedBall[1]]);
-        ballBuffer.erase(ballBuffer.begin() + selectedBall[1]);
+        entityArr.push_back(std::move(entityBuffer[selectedBall[1]]));
+        entityBuffer.erase(entityBuffer.begin() + selectedBall[1]);
         
         selectedBall[0] = -1;
         selectedBall[1] = -1;
@@ -207,7 +211,7 @@ void Application::ballEditGui(){
     ImGui::SameLine();
 
     if (ImGui::Button("Delete")){
-        std::vector <Ball>& arr = findArr(selectedBall[0]);
+        std::vector <std::unique_ptr <Entity>>& arr = findArr(selectedBall[0]);
         arr.erase(arr.begin() + selectedBall[1]);
 
         selectedBall[0] = -1;
@@ -222,24 +226,39 @@ void Application::ballEditGui(){
 }
 
 void Application::save(){
-    saveArr = ballArr;
-    saveBuffer = ballBuffer;
+
+    saveArr.clear();
+    for (auto& e : entityArr){
+        saveArr.push_back(e->clone());
+    }
+
+    saveBuffer.clear();
+    for (auto& e : entityBuffer){
+        saveBuffer.push_back(e->clone());
+    }
 }
 
 void Application::loadSave(){
-    ballArr = saveArr;
-    ballBuffer = saveBuffer;
+    entityArr.clear();
+    for (auto& e : saveArr){
+        entityArr.push_back(e->clone());
+    }
+
+    entityBuffer.clear();
+    for (auto& e : saveBuffer){
+        entityBuffer.push_back(e->clone());
+    }
 
 }
 
 
-std::vector<Ball>& Application::findArr(int id){
+std::vector <std::unique_ptr <Entity>>& Application::findArr(int id){
 
     if (id == 0){
-        return ballBuffer;
+        return entityBuffer;
     }
     if (id == 1){
-        return ballArr;
+        return entityArr;
     }
     throw std::invalid_argument("findArr: Invalid id");
 }
@@ -253,36 +272,36 @@ void Application::updateSimulation(sf::RenderWindow& window, sf::Time dt){
         Universal :: setAccelerationUniversal({0.f, 0.f});
     }
 
-    for (int i = 0; i < (int)ballArr.size(); i++){
+    for (int i = 0; i < (int)entityArr.size(); i++){
 
-        ballArr[i].update(dt.asSeconds());
+        entityArr[i].update(dt.asSeconds());
 
         if (worldBorderEnabled){
-            Collision::worldBorder(ballArr[i], resBorder);
+            Collision::worldBorder((*entityArr[i]), resBorder);
         }
 
         if (collisionEnabled){
 
-            for(int j = i + 1; j < (int)ballArr.size(); j++){
-                Collision::ballToBall(ballArr[i], ballArr[j], resBall);
+            for(int j = i + 1; j < (int)entityArr.size(); j++){
+                Collision::ballToBall(*entityArr[i], *entityArr[j], resBall);
             }
         }
         
-        ballArr[i].drawBall(window);
+        entityArr[i] -> drawShape(window);
     }
 
-    for(int i = 0; i < (int)ballBuffer.size(); i++){
-        ballBuffer[i].setShapePosition();
-        ballBuffer[i].drawBall(window);
+    for(int i = 0; i < (int)entityBuffer.size(); i++){
+        entityArr[i] -> setShapePosition();
+        entityBuffer[i] -> drawShape(window);
     }
 
 }
 
-bool Application::checkClick(std::vector <Ball> arr, int id, sf::Vector2f mousePosition){
+bool Application::checkClick(std::vector <std::unique_ptr <Entity>>& arr, int id, sf::Vector2f mousePosition){
 
     for(int i = 0; i < (int)arr.size(); i++){
 
-        sf::Vector2f position = arr[i].getPosition();
+        sf::Vector2f position = arr[i] -> getPosition();
         
         sf::Vector2f distanceVector = mousePosition - position;
 
@@ -304,8 +323,8 @@ bool Application::checkClick(std::vector <Ball> arr, int id, sf::Vector2f mouseP
 
 void Application::moveWithKeys(){
 
-    std::vector <Ball>& arr = findArr(selectedBall[0]);
-    sf::Vector2f pos = arr[selectedBall[1]].getPosition();
+    std::vector <std::unique_ptr <Entity>>& arr = findArr(selectedBall[0]);
+    sf::Vector2f pos = arr[selectedBall[1]] -> getPosition();
 
 
     float delx = 0;
@@ -330,7 +349,7 @@ void Application::moveWithKeys(){
 
         dely += 0.001f;
     }
-    arr[selectedBall[1]].setPosition({pos.x + delx, pos.y + dely});
+    arr[selectedBall[1]] -> setPosition({pos.x + delx, pos.y + dely});
 }
 
 void Application::checkSelectedBall(sf::RenderWindow& window){
@@ -353,11 +372,11 @@ void Application::checkSelectedBall(sf::RenderWindow& window){
     sf::Vector2f mousePosition = window.mapPixelToCoords(mousePixel) / PIXELS_PER_METER;
 
 
-    if (checkClick(ballBuffer, 0, mousePosition)){
+    if (checkClick(entityBuffer, 0, mousePosition)){
         return;
     }
     
-    if (checkClick(ballArr, 1, mousePosition)){
+    if (checkClick(entityArr, 1, mousePosition)){
         return;
     }
     

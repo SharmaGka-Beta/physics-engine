@@ -5,18 +5,16 @@ Wall::Wall(sf::Vector2f dimensions){
 
     rec.setSize(dimensions);
     rec.setFillColor(sf::Color::White);
+    shape = &rec;
 }
 
-void Wall::drawWall(sf::RenderWindow& window){
-    window.draw(rec);
+Wall::Wall(const Wall& other): Entity(other)
+{
+    shape = &rec;
 }
 
-void Wall::setShapePosition(){
-    rec.setPosition(position * PIXELS_PER_METER);
-}
-
-void Wall::setPosition(sf::Vector2f pos){
-    position = pos;
+std::unique_ptr<Entity> Wall::clone() const {
+    return std::make_unique<Wall>(*this);
 }
 
 void Wall::setDimensions(sf::Vector2f dim){
