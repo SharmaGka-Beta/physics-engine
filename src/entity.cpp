@@ -28,3 +28,7 @@ std::unordered_map<std::string, sf::Vector2f*> Entity::getPointersVectors(){
 std::unordered_map<std::string, float*> Entity::getPointersFloat(){
     return {};
 }
+
+std::unordered_map <std::string, sf::Vector2f*> Entity::getPointersVectors(){
+    return {};
+}

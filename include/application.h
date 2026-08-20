@@ -36,9 +36,10 @@ class Application{
         void setGui(sf::RenderWindow&, sf::Time);
         void updateSimulation(sf::RenderWindow&, sf::Time);
 
-        void ballEditGui();
         void ballAddGui();
         void wallAddGui();
+        void ballEditGui();
+        void wallEditGui();
 
         void mainGui();
         void moveWithKeys();

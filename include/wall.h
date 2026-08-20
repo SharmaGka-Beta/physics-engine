@@ -16,6 +16,10 @@ class Wall : public Entity{
 
 
         void setDimensions(sf::Vector2f);
+        sf::Vector2f getDimensions();
+        
+        std::unordered_map <std::string, sf::Vector2f*> Wall::getPointersVectors() override;
+
 };
 
 std::unique_ptr<Wall> wallGenerator(sf::Vector2f, sf::Vector2f);

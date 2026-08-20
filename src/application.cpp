@@ -266,6 +266,53 @@ void Application::ballEditGui(){
 
 }
 
+void Application::wallEditGui(){
+
+    std::vector <std::unique_ptr <Entity>>& arr = findArr(selectedBall[0]);
+
+    Wall* wall = dynamic_cast<Wall*>(arr[selectedBall[1]].get());
+
+    if (!wall){
+        return;
+    }
+
+    std::unordered_map <std::string, sf::Vector2f*> pointers = wall -> getPointersVectors();
+
+    float* pos = &pointers["position"] -> x;
+    sf::Vector2f dim = wall->getDimensions();
+
+    std::string title;
+
+    if (selectedBall[0] == 0){
+        title = "Wall " + std::to_string(selectedBall[1]) + " (Buffer)";
+    }
+    else if(selectedBall[0] == 1){
+        title = "Wall " + std::to_string(selectedBall[1]) + " (Array)";
+    }
+
+    ImGui::Begin(title.c_str());
+
+    ImGui::InputFloat2("Dimensions", &dim.x);       
+    ImGui::InputFloat2("Position", pos);
+    
+    wall -> setDimensions(dim);
+
+    if (ImGui::Button("Delete")){
+        arr.erase(arr.begin() + selectedBall[1]);
+
+        selectedBall[0] = -1;
+        selectedBall[1] = -1;
+    }
+
+    if (selectedBall[0] != -1){
+        moveWithKeys();
+    }
+
+    ImGui::End();
+
+
+}
+
 void Application::save(){
 
     saveArr.clear();

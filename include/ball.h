@@ -33,7 +33,7 @@ class Ball : public Universal, public Entity{
         float getMass();
 
         std::unordered_map <std::string, sf::Vector2f*> getPointersVectors() override;
-        std::unordered_map <std::string, float*> getPointersFloat() override;
+        std::unordered_map <std::string, float*> getPointersFloat();
 
 };
 

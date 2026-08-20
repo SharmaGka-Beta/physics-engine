@@ -9,9 +9,6 @@ class Entity{
 
     public:
 
-        virtual std::unordered_map <std::string, sf::Vector2f*> getPointersVectors();
-        virtual std::unordered_map <std::string, float*> getPointersFloat();
-
         virtual std::unique_ptr<Entity> clone() const = 0;
         
         Entity() = default;
@@ -23,6 +20,8 @@ class Entity{
 
         void drawShape(sf::RenderWindow& window);
         void setShapePosition();
+
+        virtual std::unordered_map <std::string, sf::Vector2f*> getPointersVectors();
 
     protected:
         sf::Vector2f position{};
