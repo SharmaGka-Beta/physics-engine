@@ -62,8 +62,11 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
         ballEditGui();
     }
 
-    else if(displayAddGui){
+    else if(displayAddGui == 0){
         ballAddGui();
+    }
+    else if(displayAddGui == 1){
+        wallAddGui();
     }
     else{
         mainGui();
@@ -78,8 +81,12 @@ void Application::mainGui(){
 
     ImGui::Begin(title.c_str());
 
-    if (ImGui::Button("Add Object")){
-        displayAddGui = true;
+    if (ImGui::Button("Add Ball")){
+        displayAddGui = 0;
+    }
+
+    if (ImGui::Button("Add Wall")){
+        displayAddGui = 1;
     }
 
     ImGui::Checkbox("Enable Gravity", &gravityEnabled);
@@ -159,7 +166,7 @@ void Application::ballAddGui(){
     }
 
     if (ImGui::Button("Back")){
-        displayAddGui = false;
+        displayAddGui = -1;
     }
 
     ImGui::End();
@@ -182,6 +189,11 @@ void Application::wallAddGui(){
         auto wall = wallGenerator(dimensions, position);
         entityBuffer.push_back(std::move(wall));
     }
+
+    if (ImGui::Button("Back")){
+        displayAddGui = -1;
+    }
+
 
     ImGui::End();
 }

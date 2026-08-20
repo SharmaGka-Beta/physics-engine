@@ -29,7 +29,8 @@ class Application{
         bool gravityEnabled = false;
         bool worldBorderEnabled = false;
         bool collisionEnabled = false;
-        bool displayAddGui = false;
+
+        int displayAddGui = -1;                                   // ball - 0, wall - 1
 
         void runEvents(sf::RenderWindow&);
         void setGui(sf::RenderWindow&, sf::Time);
