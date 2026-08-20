@@ -3,9 +3,9 @@
 
 Wall::Wall(sf::Vector2f dimensions){
 
-    rec.setSize(dimensions);
+    rec.setSize(dimensions * PIXELS_PER_METER);
     rec.setFillColor(sf::Color::White);
-    rec.setOrigin({dimensions.x * PIXELS_PER_METER, dimensions.y * PIXELS_PER_METER});
+    rec.setOrigin({dimensions.x * PIXELS_PER_METER / 2.f, dimensions.y * PIXELS_PER_METER / 2.f});
     shape = &rec;
 }
 

@@ -85,6 +85,8 @@ void Application::mainGui(){
         displayAddGui = 0;
     }
 
+    ImGui::SameLine();
+
     if (ImGui::Button("Add Wall")){
         displayAddGui = 1;
     }
@@ -187,7 +189,7 @@ void Application::wallAddGui(){
 
     if (ImGui::Button("Add")){
         auto wall = wallGenerator(dimensions, position);
-        entityBuffer.push_back(std::move(wall));
+        entityArr.push_back(std::move(wall));
     }
 
     if (ImGui::Button("Back")){
@@ -314,28 +316,39 @@ void Application::updateSimulation(sf::RenderWindow& window, sf::Time dt){
     for (int i = 0; i < (int)entityArr.size(); i++){
 
         Ball* ball = dynamic_cast<Ball*>(entityArr[i].get());
+        Wall* wall = nullptr;
 
         if (!ball){
-            continue;
-        }
-
-        ball -> update(dt.asSeconds());
-
-        if (worldBorderEnabled){
-            Collision::worldBorder(*ball, resBorder);
-        }
-
-        if (collisionEnabled){
-
-            for(int j = i + 1; j < (int)entityArr.size(); j++){
-
-                Ball* ballNew = dynamic_cast<Ball*>(entityArr[j].get());
-                
-                if (!ballNew){
-                    continue;
-                }
-                Collision::ballToBall(*ball, *ballNew, resBall);
+            
+            wall = dynamic_cast<Wall*>(entityArr[i].get());
+            if (!wall){
+                continue;
             }
+        }
+
+        if (ball){
+
+            ball -> update(dt.asSeconds()); //
+            
+            if (worldBorderEnabled){ //
+                Collision::worldBorder(*ball, resBorder);
+            }
+            
+            if (collisionEnabled){ //
+                
+                for(int j = i + 1; j < (int)entityArr.size(); j++){
+                    
+                    Ball* ballNew = dynamic_cast<Ball*>(entityArr[j].get());
+                    
+                    if (!ballNew){
+                        continue;
+                    }
+                    Collision::ballToBall(*ball, *ballNew, resBall);
+                }
+            }
+        }
+        else if(wall){
+            wall->setShapePosition();
         }
         
         entityArr[i] -> drawShape(window);
