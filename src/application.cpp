@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 #include "entity.h"
+#include "wall.h"
 
 void Application::run(){
 
@@ -167,6 +168,22 @@ void Application::ballAddGui(){
 
 void Application::wallAddGui(){
 
+    float* pos = &position.x;
+    float* dim = &dimensions.x;
+
+    std::string title = "Add Wall";
+
+    ImGui::Begin(title.c_str());
+
+    ImGui::InputFloat2("Dimensions", dim);
+    ImGui::InputFloat2("Position", pos);
+
+    if (ImGui::Button("Add")){
+        auto wall = wallGenerator(dimensions, position);
+        entityBuffer.push_back(std::move(wall));
+    }
+
+    ImGui::End();
 }
 
 void Application::ballEditGui(){

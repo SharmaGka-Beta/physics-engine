@@ -16,6 +16,7 @@ class Application{
         std::vector <int> selectedBall = {-1, -1};
 
         float radius = 0.f;
+        sf::Vector2f dimensions = {};
 
         float resBorder = 1;
         float resBall = 1;
