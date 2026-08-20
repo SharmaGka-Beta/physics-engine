@@ -19,18 +19,12 @@ std::unique_ptr<Entity> Wall::clone() const {
 }
 
 void Wall::setDimensions(sf::Vector2f dim){
-    rec.setSize(dim);
+    rec.setSize(dim * PIXELS_PER_METER);
     rec.setOrigin({dim.x * PIXELS_PER_METER / 2.f, dim.y * PIXELS_PER_METER / 2.f});
 }
 
 sf::Vector2f Wall::getDimensions(){
     return rec.getSize()/PIXELS_PER_METER;
-}
-
-std::unordered_map <std::string, sf::Vector2f*> Wall::getPointersVectors(){
-
-    return {{"position", &position},
-            };
 }
 
 std::unique_ptr<Wall> wallGenerator(sf::Vector2f dimensions, sf::Vector2f position){

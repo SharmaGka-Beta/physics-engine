@@ -58,10 +58,13 @@ void Application::setGui(sf::RenderWindow& window, sf::Time dt){
 
     ImGui::SFML::Update(window, dt);
 
-    if (selectedBall[0] != -1){
+    
+    if (selectedBall[0] != -1 && dynamic_cast<Ball*>(findArr(selectedBall[0])[selectedBall[1]].get())){         //check to see if object is ball/wall
         ballEditGui();
     }
-
+    else if(selectedBall[0] != -1 && dynamic_cast<Wall*>(findArr(selectedBall[0])[selectedBall[1]].get())){
+        wallEditGui();
+    }
     else if(displayAddGui == 0){
         ballAddGui();
     }
@@ -413,20 +416,41 @@ bool Application::checkClick(std::vector <std::unique_ptr <Entity>>& arr, int id
     for(int i = 0; i < (int)arr.size(); i++){
 
         Ball* ball = dynamic_cast<Ball*>(arr[i].get());
+        Wall* wall;
+        
 
         if (!ball){
-            continue;
+            wall = dynamic_cast<Wall*>(arr[i].get());
+            if (!wall){
+                continue;
+            }
         }
+        if (ball){
 
-        sf::Vector2f position = ball -> getPosition();
-        
-        sf::Vector2f distanceVector = mousePosition - position;
+            sf::Vector2f position = ball -> getPosition();
+            
+            sf::Vector2f distanceVector = mousePosition - position;
+            
+            float distance = (distanceVector.x * distanceVector.x) + (distanceVector.y * distanceVector.y);
+            
+            float radius = ball -> getRadius();
+            
+            if (distance < radius*radius){
+                selectedBall[0] = id;
+                selectedBall[1] = i;
+                return true;
+            }
+        }
+        else if(wall){
 
-        float distance = (distanceVector.x * distanceVector.x) + (distanceVector.y * distanceVector.y);
+            sf::Vector2f position = wall -> getPosition();
+            sf::Vector2f dimensions = wall->getDimensions();
 
-        float radius = ball -> getRadius();
+            if (mousePosition.x < position.x - dimensions.x/2.f || mousePosition.x > position.x + dimensions.x/2.f || mousePosition.y < position.y - dimensions.y/2.f || mousePosition.y > position.y + dimensions.y/2.f){
 
-        if (distance < radius*radius){
+                continue;
+            }
+
             selectedBall[0] = id;
             selectedBall[1] = i;
             return true;
