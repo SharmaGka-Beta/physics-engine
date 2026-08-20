@@ -8,7 +8,7 @@ Wall::Wall(sf::Vector2f dimensions){
     shape = &rec;
 }
 
-Wall::Wall(const Wall& other): Entity(other)
+Wall::Wall(const Wall& other): Entity(other), rec(other.rec)
 {
     shape = &rec;
 }
@@ -21,10 +21,11 @@ void Wall::setDimensions(sf::Vector2f dim){
     rec.setSize(dim);
 }
 
-Wall wallGenerator(sf::Vector2f dimensions, sf::Vector2f position){
+std::unique_ptr<Wall> wallGenerator(sf::Vector2f dimensions, sf::Vector2f position){
 
-    Wall wall(dimensions);
-    wall.setPosition(position);
+    auto wall = std::make_unique<Wall>(position);
+    
+    wall -> setPosition(position);
 
     return wall;
 }

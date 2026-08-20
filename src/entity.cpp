@@ -20,3 +20,11 @@ void Entity::drawShape(sf::RenderWindow& window){
 void Entity::setShapePosition(){
     (*shape).setPosition(position * PIXELS_PER_METER);
 }
+
+std::unordered_map<std::string, sf::Vector2f*> Entity::getPointersVectors(){
+    return {{"position", &position}};
+}
+
+std::unordered_map<std::string, float*> Entity::getPointersFloat(){
+    return {};
+}

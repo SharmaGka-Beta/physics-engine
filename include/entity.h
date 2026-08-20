@@ -24,9 +24,9 @@ class Entity{
         void drawShape(sf::RenderWindow& window);
         void setShapePosition();
 
-
     protected:
         sf::Vector2f position{};
         sf::Shape* shape = nullptr;
+
 
 };

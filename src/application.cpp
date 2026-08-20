@@ -10,6 +10,7 @@
 #include "collision.h"
 #include <iostream>
 #include <string>
+#include "entity.h"
 
 void Application::run(){
 
@@ -171,9 +172,15 @@ void Application::wallAddGui(){
 void Application::ballEditGui(){
 
     std::vector <std::unique_ptr <Entity>>& arr = findArr(selectedBall[0]);
+
+    Ball* ball = dynamic_cast<Ball*>(arr[selectedBall[1]].get());
+
+    if (!ball){
+        return;
+    }
         
-    std::unordered_map <std::string, sf::Vector2f*> pointers = arr[selectedBall[1]].getPointersVectors();
-    std::unordered_map <std::string, float*> pointersFloat = arr[selectedBall[1]].getPointersFloat();
+    std::unordered_map <std::string, sf::Vector2f*> pointers = ball -> getPointersVectors();
+    std::unordered_map <std::string, float*> pointersFloat = ball -> getPointersFloat();
     
     float* pos = &pointers["position"] -> x;
     float* vel = &pointers["velocity"] -> x;
@@ -181,7 +188,7 @@ void Application::ballEditGui(){
     float* m = pointersFloat["mass"];
     std::string title;
 
-    float rad = arr[selectedBall[1]].getRadius();
+    float rad = ball -> getRadius();
 
     if (selectedBall[0] == 0){
         title = "Ball " + std::to_string(selectedBall[1]) + " (Buffer)";
@@ -198,17 +205,20 @@ void Application::ballEditGui(){
     ImGui::InputFloat2("Acceleration", acc);
     ImGui::InputFloat("Mass", m);
 
-    arr[selectedBall[1]].setRadius(rad);
+    ball -> setRadius(rad);
 
-    if (ImGui::Button("Simulate")){
-        
-        entityArr.push_back(std::move(entityBuffer[selectedBall[1]]));
-        entityBuffer.erase(entityBuffer.begin() + selectedBall[1]);
-        
-        selectedBall[0] = -1;
-        selectedBall[1] = -1;
+    if (selectedBall[0] == 0){
+
+        if (ImGui::Button("Simulate")){
+            
+            entityArr.push_back(std::move(entityBuffer[selectedBall[1]]));
+            entityBuffer.erase(entityBuffer.begin() + selectedBall[1]);
+            
+            selectedBall[0] = -1;
+            selectedBall[1] = -1;
+        }
+        ImGui::SameLine();
     }
-    ImGui::SameLine();
 
     if (ImGui::Button("Delete")){
         std::vector <std::unique_ptr <Entity>>& arr = findArr(selectedBall[0]);
@@ -274,16 +284,28 @@ void Application::updateSimulation(sf::RenderWindow& window, sf::Time dt){
 
     for (int i = 0; i < (int)entityArr.size(); i++){
 
-        entityArr[i].update(dt.asSeconds());
+        Ball* ball = dynamic_cast<Ball*>(entityArr[i].get());
+
+        if (!ball){
+            continue;
+        }
+
+        ball -> update(dt.asSeconds());
 
         if (worldBorderEnabled){
-            Collision::worldBorder((*entityArr[i]), resBorder);
+            Collision::worldBorder(*ball, resBorder);
         }
 
         if (collisionEnabled){
 
             for(int j = i + 1; j < (int)entityArr.size(); j++){
-                Collision::ballToBall(*entityArr[i], *entityArr[j], resBall);
+
+                Ball* ballNew = dynamic_cast<Ball*>(entityArr[j].get());
+                
+                if (!ballNew){
+                    continue;
+                }
+                Collision::ballToBall(*ball, *ballNew, resBall);
             }
         }
         
@@ -291,7 +313,7 @@ void Application::updateSimulation(sf::RenderWindow& window, sf::Time dt){
     }
 
     for(int i = 0; i < (int)entityBuffer.size(); i++){
-        entityArr[i] -> setShapePosition();
+        entityBuffer[i] -> setShapePosition();
         entityBuffer[i] -> drawShape(window);
     }
 
@@ -301,13 +323,19 @@ bool Application::checkClick(std::vector <std::unique_ptr <Entity>>& arr, int id
 
     for(int i = 0; i < (int)arr.size(); i++){
 
-        sf::Vector2f position = arr[i] -> getPosition();
+        Ball* ball = dynamic_cast<Ball*>(arr[i].get());
+
+        if (!ball){
+            continue;
+        }
+
+        sf::Vector2f position = ball -> getPosition();
         
         sf::Vector2f distanceVector = mousePosition - position;
 
         float distance = (distanceVector.x * distanceVector.x) + (distanceVector.y * distanceVector.y);
 
-        float radius = arr[i].getRadius();
+        float radius = ball -> getRadius();
 
         if (distance < radius*radius){
             selectedBall[0] = id;
