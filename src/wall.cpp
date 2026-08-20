@@ -23,8 +23,8 @@ void Wall::setDimensions(sf::Vector2f dim){
 
 std::unique_ptr<Wall> wallGenerator(sf::Vector2f dimensions, sf::Vector2f position){
 
-    auto wall = std::make_unique<Wall>(position);
-    
+    auto wall = std::make_unique<Wall>(dimensions);
+
     wall -> setPosition(position);
 
     return wall;
