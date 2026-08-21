@@ -8,9 +8,10 @@ class Wall : public Entity{
 
     private:
         sf::RectangleShape rec{};
+        sf::Angle angle;
 
     public:
-        explicit Wall(sf::Vector2f);
+        explicit Wall(sf::Vector2f, sf::Angle);
         Wall(const Wall& other);
 
         std::unique_ptr<Entity> clone() const override;
@@ -18,7 +19,10 @@ class Wall : public Entity{
 
         void setDimensions(sf::Vector2f);
         sf::Vector2f getDimensions();
+        float getAngle();
+        void setAngle(sf::Angle);
+        
 
 };
 
-std::unique_ptr<Wall> wallGenerator(sf::Vector2f, sf::Vector2f);
+std::unique_ptr<Wall> wallGenerator(sf::Vector2f, sf::Vector2f, sf::Angle);

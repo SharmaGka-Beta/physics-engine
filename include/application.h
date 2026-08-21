@@ -19,6 +19,7 @@ class Application{
 
         float radius = 0.f;
         sf::Vector2f dimensions = {};
+        float angle = {};
 
         float resBorder = 1;
         float resBall = 1;

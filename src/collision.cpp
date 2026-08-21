@@ -89,40 +89,87 @@ void Collision::ballToWall(Ball& ball, Wall& wall, float e){
 
     sf::Vector2f wallPos = wall.getPosition();
     sf::Vector2f wallDim = wall.getDimensions();
+    sf::Angle wallAngle = sf::radians(wall.getAngle());
 
-    float wallLeft   = wallPos.x - wallDim.x / 2.f;
-    float wallRight  = wallPos.x + wallDim.x / 2.f;
-    float wallTop    = wallPos.y - wallDim.y / 2.f;
-    float wallBottom = wallPos.y + wallDim.y / 2.f;
+    float c = std::cos(wallAngle.asRadians());
+    float s = std::sin(wallAngle.asRadians());
 
-    bool overlapX = (ballPos.x + radius > wallLeft) && (ballPos.x - radius < wallRight);
-    bool overlapY = (ballPos.y + radius > wallTop)  && (ballPos.y - radius < wallBottom);
+    sf::Vector2f xAxis = {c, s};
+    sf::Vector2f yAxis = {-s, c};
 
-    if (!(overlapX && overlapY)){
+    sf::Vector2f rel = ballPos - wallPos;
+
+    float localX = rel.x * xAxis.x + rel.y * xAxis.y;
+    float localY = rel.x * yAxis.x + rel.y * yAxis.y; 
+
+    float halfW = wallDim.x / 2.f;
+    float halfH = wallDim.y / 2.f;
+
+    float clampedX = std::clamp(localX, -halfW, halfW);
+    float clampedY = std::clamp(localY, -halfH, halfH);
+
+    float deltaX = localX - clampedX;
+    float deltaY = localY - clampedY;
+    float distSq = deltaX * deltaX + deltaY * deltaY;
+
+    if (distSq >= radius * radius){
         return;
     }
 
-    if (ballPos.x <= wallLeft){
-        ballPos.x = wallLeft - radius;
-        velocity.x = velocity.x * (-1.f) * e;
+    float dist = std::sqrt(distSq);
+
+    sf::Vector2f worldNormal;
+
+    if (dist > 0.0001f){
+        float invDist = 1.f / dist;
+        worldNormal = xAxis * (deltaX * invDist) + yAxis * (deltaY * invDist);
+    } 
+    else{
+        worldNormal = yAxis;
     }
 
-    else if(ballPos.x >= wallRight){
-        ballPos.x = wallRight + radius;
-        velocity.x = velocity.x * (-1.f) * e;
-    }
 
-    if (ballPos.y <= wallTop){
-        ballPos.y = wallTop - radius;
-        velocity.y = velocity.y * (-1.f) * e;
-    }
-    else if (ballPos.y >= wallBottom){
-        ballPos.y = wallBottom + radius;
-        velocity.y = velocity.y * (-1.f) * e;
-    }
+    float penetration = radius - dist;
+    ballPos += worldNormal * penetration;
 
+    float vDotN = velocity.x * worldNormal.x + velocity.y * worldNormal.y;
+    if (vDotN < 0.f){
+        velocity = velocity - worldNormal * (1.f + e) * vDotN;
+    }
+    
     ball.setPosition(ballPos);
     ball.setVelocity(velocity);
+    // float wallLeft   = wallPos.x - wallDim.x / 2.f;
+    // float wallRight  = wallPos.x + wallDim.x / 2.f;
+    // float wallTop    = wallPos.y - wallDim.y / 2.f;
+    // float wallBottom = wallPos.y + wallDim.y / 2.f;
+
+    // bool overlapX = (ballPos.x + radius > wallLeft) && (ballPos.x - radius < wallRight);
+    // bool overlapY = (ballPos.y + radius > wallTop)  && (ballPos.y - radius < wallBottom);
+
+    // if (!(overlapX && overlapY)){
+    //     return;
+    // }
+
+    // if (ballPos.x <= wallLeft){
+    //     ballPos.x = wallLeft - radius;
+    //     velocity.x = velocity.x * (-1.f) * e;
+    // }
+
+    // else if(ballPos.x >= wallRight){
+    //     ballPos.x = wallRight + radius;
+    //     velocity.x = velocity.x * (-1.f) * e;
+    // }
+
+    // if (ballPos.y <= wallTop){
+    //     ballPos.y = wallTop - radius;
+    //     velocity.y = velocity.y * (-1.f) * e;
+    // }
+    // else if (ballPos.y >= wallBottom){
+    //     ballPos.y = wallBottom + radius;
+    //     velocity.y = velocity.y * (-1.f) * e;
+    // }
+
 
 }
 

@@ -184,6 +184,7 @@ void Application::wallAddGui(){
 
     float* pos = &position.x;
     float* dim = &dimensions.x;
+    float* deg = &angle;
 
     std::string title = "Add Wall";
 
@@ -191,9 +192,10 @@ void Application::wallAddGui(){
 
     ImGui::InputFloat2("Dimensions", dim);
     ImGui::InputFloat2("Position", pos);
+    ImGui::SliderAngle("Angle", deg);
 
     if (ImGui::Button("Add")){
-        auto wall = wallGenerator(dimensions, position);
+        auto wall = wallGenerator(dimensions, position, sf::radians(angle));
         entityArr.push_back(std::move(wall));
     }
 
@@ -284,7 +286,9 @@ void Application::wallEditGui(){
     std::unordered_map <std::string, sf::Vector2f*> pointers = wall -> getPointersVectors();
 
     float* pos = &pointers["position"] -> x;
-    sf::Vector2f dim = wall->getDimensions();
+    sf::Vector2f dim = wall -> getDimensions();
+    float angle = wall -> getAngle();
+
 
     std::string title;
 
@@ -299,8 +303,10 @@ void Application::wallEditGui(){
 
     ImGui::InputFloat2("Dimensions", &dim.x);       
     ImGui::InputFloat2("Position", pos);
+    ImGui::SliderAngle("Angle", &angle);
     
     wall -> setDimensions(dim);
+    wall -> setAngle(sf::radians(angle));
 
     if (ImGui::Button("Delete")){
         arr.erase(arr.begin() + selectedBall[1]);

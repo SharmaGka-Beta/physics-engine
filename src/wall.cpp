@@ -3,11 +3,12 @@
 #include "wall.h"
 #include "constants.h"
 
-Wall::Wall(sf::Vector2f dimensions){
+Wall::Wall(sf::Vector2f dimensions, sf::Angle degree){
 
     rec.setSize(dimensions * PIXELS_PER_METER);
     rec.setFillColor(sf::Color::White);
     rec.setOrigin({dimensions.x * PIXELS_PER_METER / 2.f, dimensions.y * PIXELS_PER_METER / 2.f});
+    rec.setRotation(degree);
     shape = &rec;
 }
 
@@ -29,9 +30,17 @@ sf::Vector2f Wall::getDimensions(){
     return rec.getSize()/PIXELS_PER_METER;
 }
 
-std::unique_ptr<Wall> wallGenerator(sf::Vector2f dimensions, sf::Vector2f position){
+float Wall::getAngle(){
+    return rec.getRotation().asRadians();
+}
 
-    auto wall = std::make_unique<Wall>(dimensions);
+void Wall::setAngle(sf::Angle deg){
+    rec.setRotation(deg);
+}
+
+std::unique_ptr<Wall> wallGenerator(sf::Vector2f dimensions, sf::Vector2f position, sf::Angle degree){
+
+    auto wall = std::make_unique<Wall>(dimensions, degree);
 
     wall -> setPosition(position);
 
