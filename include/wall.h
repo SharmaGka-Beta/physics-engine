@@ -1,7 +1,8 @@
 #pragma once
 
-#include "entity.h"
 #include <SFML/Graphics.hpp>
+
+#include "entity.h"
 
 class Wall : public Entity{
 

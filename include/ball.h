@@ -1,10 +1,11 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "universal.h"
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
+
 #include "entity.h"
+#include "universal.h"
 
 class Ball : public Universal, public Entity{
     private:

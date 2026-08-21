@@ -1,8 +1,9 @@
-#include "collision.h"
-#include "ball.h"
-#include "constants.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+
+#include "ball.h"
+#include "collision.h"
+#include "constants.h"
 
 void Collision :: worldBorder(Ball& ball, float e){
 

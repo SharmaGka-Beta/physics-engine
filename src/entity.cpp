@@ -1,3 +1,6 @@
+#include <SFML/Graphics.hpp>
+#include <unordered_map>
+
 #include "entity.h"
 #include "constants.h"
 

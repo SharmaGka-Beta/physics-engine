@@ -1,5 +1,6 @@
-#include "universal.h"
 #include <SFML/Graphics.hpp>
+
+#include "universal.h"
 
 sf::Vector2f Universal :: velocityUniversal = {0.f, 0.f};
 sf::Vector2f Universal :: accelerationUniversal = {0.f, 0.f};

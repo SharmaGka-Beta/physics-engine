@@ -1,6 +1,9 @@
+#include <SFML/Graphics.hpp>
+#include <string>
+#include <unordered_map>
+
 #include "ball.h"
 #include "constants.h"
-#include <string>
 
 
 Ball::Ball(float radius){

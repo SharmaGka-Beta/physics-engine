@@ -1,3 +1,5 @@
+#include <SFML/Graphics.hpp>
+
 #include "wall.h"
 #include "constants.h"
 
