@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-void Collision :: worldBorder(Ball& ball, float coeffRestitution){
+void Collision :: worldBorder(Ball& ball, float e){
 
     sf::Vector2f velocity = ball.getVelocity();
     sf::Vector2f position = ball.getPosition();
@@ -13,21 +13,21 @@ void Collision :: worldBorder(Ball& ball, float coeffRestitution){
 
     if (position.x <= radius && position.x > -radius){
         position.x = radius;
-        velocity.x = velocity.x * (-1.f) * coeffRestitution;
+        velocity.x = velocity.x * (-1.f) * e;
     }
     else if(position.x >= WINDOW_LENGTH - radius && position.x < WINDOW_LENGTH + radius){
         position.x = WINDOW_LENGTH - radius;
-        velocity.x = velocity.x * (-1.f) * coeffRestitution; 
+        velocity.x = velocity.x * (-1.f) * e; 
 
     }
     if (position.y <= radius && position.y > -radius){
         position.y = radius;
-        velocity.y = velocity.y * (-1.f) * coeffRestitution;
+        velocity.y = velocity.y * (-1.f) * e;
 
     }
     else if(position.y >= WINDOW_WIDTH - radius && position.y < WINDOW_WIDTH + radius){
         position.y = WINDOW_WIDTH - radius;
-        velocity.y = velocity.y * (-1.f) * coeffRestitution;
+        velocity.y = velocity.y * (-1.f) * e;
 
     }
 
@@ -77,6 +77,52 @@ void Collision::ballToBall(Ball& ball1, Ball& ball2, float e){
     ball1.setVelocity(v1);
     ball2.setVelocity(v2);
     
+}
+
+void Collision::ballToWall(Ball& ball, Wall& wall, float e){
+
+    sf::Vector2f ballPos = ball.getPosition();
+    sf::Vector2f velocity = ball.getVelocity();
+    float radius = ball.getRadius();
+
+
+    sf::Vector2f wallPos = wall.getPosition();
+    sf::Vector2f wallDim = wall.getDimensions();
+
+    float wallLeft   = wallPos.x - wallDim.x / 2.f;
+    float wallRight  = wallPos.x + wallDim.x / 2.f;
+    float wallTop    = wallPos.y - wallDim.y / 2.f;
+    float wallBottom = wallPos.y + wallDim.y / 2.f;
+
+    bool overlapX = (ballPos.x + radius > wallLeft) && (ballPos.x - radius < wallRight);
+    bool overlapY = (ballPos.y + radius > wallTop)  && (ballPos.y - radius < wallBottom);
+
+    if (!(overlapX && overlapY)){
+        return;
+    }
+
+    if (ballPos.x <= wallLeft){
+        ballPos.x = wallLeft - radius;
+        velocity.x = velocity.x * (-1.f) * e;
+    }
+
+    else if(ballPos.x >= wallRight){
+        ballPos.x = wallRight + radius;
+        velocity.x = velocity.x * (-1.f) * e;
+    }
+
+    if (ballPos.y <= wallTop){
+        ballPos.y = wallTop - radius;
+        velocity.y = velocity.y * (-1.f) * e;
+    }
+    else if (ballPos.y >= wallBottom){
+        ballPos.y = wallBottom + radius;
+        velocity.y = velocity.y * (-1.f) * e;
+    }
+
+    ball.setPosition(ballPos);
+    ball.setVelocity(velocity);
+
 }
 
 

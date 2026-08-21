@@ -378,13 +378,13 @@ void Application::updateSimulation(sf::RenderWindow& window, sf::Time dt){
 
         if (ball){
 
-            ball -> update(dt.asSeconds()); //
+            ball -> update(dt.asSeconds());
             
-            if (worldBorderEnabled){ //
+            if (worldBorderEnabled){
                 Collision::worldBorder(*ball, resBorder);
             }
             
-            if (collisionEnabled){ //
+            if (collisionEnabled){
                 
                 for(int j = i + 1; j < (int)entityArr.size(); j++){
                     
@@ -395,6 +395,18 @@ void Application::updateSimulation(sf::RenderWindow& window, sf::Time dt){
                     }
                     Collision::ballToBall(*ball, *ballNew, resBall);
                 }
+
+                for(int j = 0; j < (int)entityArr.size(); j++){
+
+                    Wall* wallNew = dynamic_cast<Wall*>(entityArr[j].get());
+
+                    if (!wallNew){
+                        continue;
+                    }
+                    Collision::ballToWall(*ball, *wallNew, resBall);
+
+                }
+
             }
         }
         else if(wall){
