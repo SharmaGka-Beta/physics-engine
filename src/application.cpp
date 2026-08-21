@@ -463,17 +463,30 @@ bool Application::checkClick(std::vector <std::unique_ptr <Entity>>& arr, int id
         }
         else if(wall){
 
-            sf::Vector2f position = wall -> getPosition();
+            sf::Vector2f position = wall->getPosition();
             sf::Vector2f dimensions = wall->getDimensions();
+            float angle = wall -> getAngle();
 
-            if (mousePosition.x < position.x - dimensions.x/2.f || mousePosition.x > position.x + dimensions.x/2.f || mousePosition.y < position.y - dimensions.y/2.f || mousePosition.y > position.y + dimensions.y/2.f){
 
+            float c = std::cos(angle);
+            float s = std::sin(angle);
+
+            sf::Vector2f rel = mousePosition - position;
+
+            float localX = rel.x * c + rel.y * s;
+            float localY = -rel.x * s + rel.y * c;
+
+            float halfW = dimensions.x / 2.f;
+            float halfH = dimensions.y / 2.f;
+
+            if (localX < -halfW || localX > halfW || localY < -halfH || localY > halfH){
                 continue;
             }
 
             selectedBall[0] = id;
             selectedBall[1] = i;
             return true;
+
         }
 
     }
