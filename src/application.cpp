@@ -504,26 +504,50 @@ void Application::moveWithKeys(){
     float delx = 0;
     float dely = 0;
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)){
+    float delAngle = 0;
+
+    typedef sf::Keyboard::Key key;
+
+    if (sf::Keyboard::isKeyPressed(key::Right) && !(sf::Keyboard::isKeyPressed(key::LShift) || sf::Keyboard::isKeyPressed(key::RShift))){
 
         delx += 0.001f;
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)){
+    if (sf::Keyboard::isKeyPressed(key::Left) && !(sf::Keyboard::isKeyPressed(key::LShift) || sf::Keyboard::isKeyPressed(key::RShift))){
 
         delx -= 0.001f;
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up)){
+    if (sf::Keyboard::isKeyPressed(key::Up)){
 
         dely -= 0.001f;
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)){
+    if (sf::Keyboard::isKeyPressed(key::Down)){
 
         dely += 0.001f;
     }
     arr[selectedBall[1]] -> setPosition({pos.x + delx, pos.y + dely});
+
+    Wall* wall = dynamic_cast<Wall*>(arr[selectedBall[1]].get());
+
+    if (!wall){
+        return;
+    }
+
+    float angle = wall -> getAngle();
+
+    if (!(sf::Keyboard::isKeyPressed(key::LShift) || sf::Keyboard::isKeyPressed(key::RShift))){
+        return;
+    }
+    if (sf::Keyboard::isKeyPressed(key::Right)){
+        delAngle += 0.001f;
+    }
+    if (sf::Keyboard::isKeyPressed(key::Left)){
+        delAngle -= 0.001f;
+    }
+    wall -> setAngle(sf::radians(angle + delAngle));
+
 }
 
 void Application::checkSelectedBall(sf::RenderWindow& window){
